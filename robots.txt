@@ -1,0 +1,32 @@
+# TheDoorPro — robots.txt
+# Allow all standard search engines full access.
+User-agent: *
+Allow: /
+
+# Explicitly welcome major AI / answer engines (2026) so TheDoorPro can appear
+# in AI search results and answer overviews.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://thedoorpro.ca/sitemap.xml
