@@ -51,14 +51,33 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-// Simple browser test: visit https://thedoorpro.ca/api/chat in your browser.
-// If you SEE this message, the function deployed correctly.
-// If you get a 404 / "Not Found" / 405, the functions folder did NOT deploy.
-export async function onRequestGet() {
-  return new Response(
-    JSON.stringify({ status: "ok", message: "Mortise function is LIVE on TheDoorPro" }),
-    { status: 200, headers: { "Content-Type": "application/json" } }
-  );
+// Browser test + live key check: visit https://thedoorpro.ca/api/chat
+// It makes a tiny real call to Anthropic and shows EXACTLY what happens.
+export async function onRequestGet({ env }) {
+  const key = env.ANTHROPIC_API_KEY;
+  if (!key) {
+    return new Response(JSON.stringify({ test: "FAIL", reason: "No API key found in Cloudflare (env.ANTHROPIC_API_KEY missing)" }, null, 2),
+      { status: 200, headers: { "Content-Type": "application/json" } });
+  }
+  try {
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
+      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 20, messages: [{ role: "user", content: "Say OK" }] }),
+    });
+    const body = await r.text();
+    const ok = r.status === 200;
+    return new Response(JSON.stringify({
+      test: ok ? "PASS \u2705 Mortise can talk to Anthropic" : "FAIL \u274c Anthropic rejected the call",
+      anthropic_status: r.status,
+      key_starts_with: key.slice(0, 14),
+      key_length: key.length,
+      anthropic_said: body.slice(0, 400),
+    }, null, 2), { status: 200, headers: { "Content-Type": "application/json" } });
+  } catch (e) {
+    return new Response(JSON.stringify({ test: "FAIL", reason: "Could not reach Anthropic", detail: String(e) }, null, 2),
+      { status: 200, headers: { "Content-Type": "application/json" } });
+  }
 }
 
 // Handle the browser's CORS preflight check
