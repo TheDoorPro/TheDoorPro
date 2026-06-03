@@ -381,7 +381,7 @@ async function sendEmailAlert(data, hubspotOk) {
     try {
       const res = await fetch("/api/chat",{
         method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:SYSTEM_PROMPT+`\n\nYOUR NAME FOR THIS CHAT: ${agent.name}. Sign on naturally as ${agent.name} if introducing yourself. Keep replies short.`,
+        body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:SYSTEM_PROMPT+`\n\nYOUR NAME FOR THIS CHAT: ${agent.name}. Sign on naturally as ${agent.name} if introducing yourself. Keep replies short.`,
           messages:messages.map(m=>({role:m.role,content:m.content}))})
       });
       const data = await res.json();
