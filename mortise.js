@@ -351,6 +351,7 @@ When ready to submit (name + contact + project info collected), add at end:
     const c = document.getElementById("mortise-messages");
     c.innerHTML = "";
     messages.forEach(m => {
+      if (m._hidden) return; // internal context note for the AI — never shown to the customer
       const row = document.createElement("div");
       row.className = `mortise-row ${m.role}`;
       if (m.role === "assistant") {
@@ -526,7 +527,8 @@ async function sendProspectEmail(data) {
     const files=[...e.target.files].slice(0,8);
     if(!files.length)return;
     e.target.value="";
-    messages.push({role:"assistant",content:`Got it — uploading ${files.length} photo${files.length>1?"s":""} for the team. One moment…`});
+    const upMsg={role:"assistant",content:`Got it — uploading ${files.length} photo${files.length>1?"s":""} for the team. One moment…`,_local:true};
+    messages.push(upMsg);
     renderMessages();
     try{
       const fd=new FormData();
@@ -535,12 +537,14 @@ async function sendProspectEmail(data) {
       const data=await res.json();
       if(data.ok&&data.urls&&data.urls.length){
         photoLinks=photoLinks.concat(data.urls);
-        messages.push({role:"assistant",content:`Perfect — ${data.urls.length} photo${data.urls.length>1?"s":""} received and attached to your file. Anything else you'd like to add?`});
+        // Tell the AI (invisibly) that photos really were received, so it never contradicts itself.
+        messages.push({role:"user",content:`[SYSTEM NOTE — not from the customer: The customer just successfully uploaded ${data.urls.length} photo(s) using the photo button. These photos ARE received and attached to their file for the team. Acknowledge them naturally and continue — do NOT say you didn't receive any photos.]`,_hidden:true});
+        messages.push({role:"assistant",content:`Perfect — ${data.urls.length} photo${data.urls.length>1?"s":""} received and attached to your file. Anything else you'd like to add, or shall I get this over to the team?`,_local:true});
       }else{
-        messages.push({role:"assistant",content:"I couldn't attach those just now — no worries, you can also text them to 403-473-2200. What else can I help with?"});
+        messages.push({role:"assistant",content:"I couldn't attach those just now — no worries, you can also text them to 403-473-2200. What else can I help with?",_local:true});
       }
     }catch{
-      messages.push({role:"assistant",content:"I couldn't attach those just now — you can text them to 403-473-2200 instead. What else can I help with?"});
+      messages.push({role:"assistant",content:"I couldn't attach those just now — you can text them to 403-473-2200 instead. What else can I help with?",_local:true});
     }
     renderMessages();
   }
