@@ -178,6 +178,13 @@ SCOPE questions — get the practical details:
 Capture everything the customer shares in the project_description field. The more detail the better — this is what the team uses to prepare before calling.
 4. Photos — these are SUPER important, ask every time, naturally. Frame it around value: "Photos genuinely help our team find the best solution for you — they can see exactly what's going on before they ever follow up." Ask for a FEW photos, not just one, and guide them on what's most useful: a full view of the front and back of the door, plus close-ups of the hardware or the specific problem area (for example, a broken hinge, a gap, or damage). Tell them to tap the photo/camera button at the bottom-left of the chat to send pictures right here, and let them know you'll include them in the service request package you send to the TheDoorPro team. They can also text photos to 403-473-2200 if they prefer. If they can't right now, note it and keep going — don't nag.
 
+WHEN YOU CAN SEE A PHOTO (the customer uploaded one and it's in the conversation):
+- Look at it and make a warm, relatable OBSERVATION — describe what you visually notice ("I can see the gap along the top of the frame," "that hinge does look worn," "looks like a nice solid wood slab"). This builds trust and makes the customer feel understood.
+- DO NOT diagnose the root cause, do NOT promise a specific fix, and NEVER quote or estimate a price from a photo. A photo can be misleading — lighting, angle, hidden damage.
+- After observing, ALWAYS point back to the team: "I'll make a note of this for the team — they'll review the full set of photos and follow up with the best solution and next steps." The pros evaluate the complete install package; you just observe and note.
+- Capture your observation in the project_description as a note, e.g. [Mortise observed from photo: visible gap at top of frame, hinge appears worn].
+- Keep it brief — an observation or two, then continue the intake. You are still here to convert them into a lead, not to give a full inspection.
+
 YOUR ROLE — Be clear about who you are. You are the client relations specialist who handles intake. You do NOT personally call customers, you do NOT give final estimates, and TheDoorPro does NOT call instantly. The installation/admin team reviews each project, prepares the estimate, and follows up within 24-48 hours. NEVER say or imply "someone will call you right now" or ask "do you want us to call you?" — that makes a customer sit waiting for a phone that isn't ringing. Instead: confirm we can help, gather the details, complete the form, and let them know the team will review and follow up. You CAN offer to book a call or schedule a consultation if they'd prefer a set time — capture their preferred window.
 
 ESCALATION: If unsure say "That is outside what I can confirm from here — I will flag that for the team."
@@ -354,10 +361,12 @@ When ready to submit (name + contact + project info collected), add at end:
       if (m._hidden) return; // internal context note for the AI — never shown to the customer
       const row = document.createElement("div");
       row.className = `mortise-row ${m.role}`;
+      // Photo messages (content is an array) show a simple label, never raw image data.
+      const display = m._display ? m._display : (typeof m.content === "string" ? m.content : "");
       if (m.role === "assistant") {
-        row.innerHTML = monogram(agent.letter,30) + `<div class="mortise-bubble">${m.content.replace(/\n/g,"<br>")}</div>`;
+        row.innerHTML = monogram(agent.letter,30) + `<div class="mortise-bubble">${display.replace(/\n/g,"<br>")}</div>`;
       } else {
-        row.innerHTML = `<div class="mortise-bubble">${m.content.replace(/\n/g,"<br>")}</div>`;
+        row.innerHTML = `<div class="mortise-bubble">${display.replace(/\n/g,"<br>")}</div>`;
       }
       c.appendChild(row);
     });
@@ -455,7 +464,14 @@ async function sendProspectEmail(data) {
     if (!text || isLoading) return;
     messages.push({role:"user",content:text});
     input.value=""; input.style.height="auto";
-    updateSendBtn(); renderMessages(); isLoading=true;
+    updateSendBtn(); renderMessages();
+    await getReply();
+  }
+
+  // Shared: send the conversation to Mortise and render his reply (used by text + photos).
+  async function getReply() {
+    if (isLoading) return;
+    isLoading=true;
     document.getElementById("mortise-typing").classList.add("show");
     document.getElementById("mortise-messages").scrollTop=99999;
     const startedAt = Date.now();
@@ -523,30 +539,74 @@ async function sendProspectEmail(data) {
   document.getElementById("mortise-photo").addEventListener("click",()=>document.getElementById("mortise-file").click());
   document.getElementById("mortise-file").addEventListener("change",handlePhotos);
 
+  // Downscale an image file to a base64 JPEG (smaller = cheaper + faster for the AI to "see").
+  function downscaleToBase64(file, maxDim){
+    return new Promise((resolve)=>{
+      const img=new Image();
+      const url=URL.createObjectURL(file);
+      img.onload=()=>{
+        let width=img.width, height=img.height;
+        if(width>maxDim||height>maxDim){
+          if(width>=height){height=Math.round(height*maxDim/width);width=maxDim;}
+          else{width=Math.round(width*maxDim/height);height=maxDim;}
+        }
+        const canvas=document.createElement("canvas");
+        canvas.width=width;canvas.height=height;
+        canvas.getContext("2d").drawImage(img,0,0,width,height);
+        const dataUrl=canvas.toDataURL("image/jpeg",0.8);
+        URL.revokeObjectURL(url);
+        resolve(dataUrl.split(",")[1]); // strip the "data:image/jpeg;base64," prefix
+      };
+      img.onerror=()=>{URL.revokeObjectURL(url);resolve(null);};
+      img.src=url;
+    });
+  }
+
   async function handlePhotos(e){
     const files=[...e.target.files].slice(0,8);
     if(!files.length)return;
     e.target.value="";
-    const upMsg={role:"assistant",content:`Got it — uploading ${files.length} photo${files.length>1?"s":""} for the team. One moment…`,_local:true};
-    messages.push(upMsg);
+    messages.push({role:"assistant",content:"Got it — let me take a look and pass these along to the team. One moment…",_local:true});
     renderMessages();
+
+    // 1) Upload ORIGINAL full-quality photos to HubSpot (for the team).
     try{
       const fd=new FormData();
       files.forEach(f=>fd.append("photo",f));
       const res=await fetch("/api/upload",{method:"POST",body:fd});
       const data=await res.json();
-      if(data.ok&&data.urls&&data.urls.length){
-        photoLinks=photoLinks.concat(data.urls);
-        // Tell the AI (invisibly) that photos really were received, so it never contradicts itself.
-        messages.push({role:"user",content:`[SYSTEM NOTE — not from the customer: The customer just successfully uploaded ${data.urls.length} photo(s) using the photo button. These photos ARE received and attached to their file for the team. Acknowledge them naturally and continue — do NOT say you didn't receive any photos.]`,_hidden:true});
-        messages.push({role:"assistant",content:`Perfect — ${data.urls.length} photo${data.urls.length>1?"s":""} received and attached to your file. Anything else you'd like to add, or shall I get this over to the team?`,_local:true});
-      }else{
-        messages.push({role:"assistant",content:"I couldn't attach those just now — no worries, you can also text them to 403-473-2200. What else can I help with?",_local:true});
-      }
-    }catch{
-      messages.push({role:"assistant",content:"I couldn't attach those just now — you can text them to 403-473-2200 instead. What else can I help with?",_local:true});
+      if(data.ok&&data.urls&&data.urls.length){ photoLinks=photoLinks.concat(data.urls); }
+    }catch(_){}
+
+    // 2) Make downscaled copies so Mortise can SEE them (cheap + fast).
+    const imageBlocks=[];
+    for(const f of files){
+      const b64=await downscaleToBase64(f,1024);
+      if(b64) imageBlocks.push({type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}});
     }
+    if(!imageBlocks.length){
+      messages.push({role:"assistant",content:"I couldn't open those just now — no worries, you can also text them to 403-473-2200. What else can I help with?",_local:true});
+      renderMessages();return;
+    }
+
+    // 3) Build a user turn carrying the images, and let Mortise observe them.
+    const n=imageBlocks.length;
+    messages.push({
+      role:"user",
+      content:[
+        {type:"text",text:`[The customer just uploaded ${n} photo(s) of their door using the photo button. They ARE received and attached to the file for the team. Take a look and make a brief, warm observation about what you can see — but do NOT diagnose the cause or quote a price. Then note it for the team and continue the intake.]`},
+        ...imageBlocks
+      ],
+      _display:`📷 Sent ${n} photo${n>1?"s":""}`
+    });
     renderMessages();
+    await getReply();
+    // Cost control: once Mortise has seen the photos, drop the heavy image data from history
+    // (keep a text note so the conversation still makes sense). Avoids re-sending images every turn.
+    const idx=messages.findIndex(m=>m._display && Array.isArray(m.content));
+    if(idx>-1){
+      messages[idx].content=`[Customer sent ${n} photo(s), which Mortise reviewed and noted for the team.]`;
+    }
   }
   document.getElementById("mortise-input").addEventListener("keydown",e=>{
     if(e.key==="Enter"&&!e.shiftKey&&window.innerWidth>600){e.preventDefault();sendMessage();}
