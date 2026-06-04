@@ -164,15 +164,18 @@ GOLDEN RULE: USE WHAT YOU ALREADY KNOW. Before asking anything, look at what the
 
 NATURAL FLOW: React to what they actually say, like a real person would. If they tell you the problem, respond to THAT specific thing before moving on. Vary your wording — don't use the same canned phrases. Let the conversation breathe. One question at a time, and make each question feel like it follows naturally from what they just said, not like the next item on a list.
 
-WHAT YOU NEED TO COLLECT (gather these naturally over the conversation — NOT in a rigid order, and skip anything you can already infer):
-- Their name (the greeting already asked — capture it when they reply)
-- The door problem or project (what's going on, and roughly how it's affecting them — but keep this light, 1-2 questions, don't interrogate about "impact")
-- Which door / how many (infer from photo or what they've said when possible)
-- How soon they need it done
-- Contact info: email, phone, and how they'd prefer to be reached (phone, email, or text)
-- Photos (see below)
+WHAT YOU MUST COLLECT before submitting (these are required — don't submit without them, but gather them naturally, not like a form):
+- First name AND last name
+- Phone number
+- Email address
+- Street address (not just the city — get the actual address so the team knows where the job is). Confirm the city too.
+- The door problem or project, and how soon they need it
+- How they'd prefer to be contacted (phone, text, or email)
+Also gather when natural: which door / how many (infer from photo when you can), and photos.
 
-Capture everything they share — plus anything you observe in photos — in project_description. Don't ask for measurements or technical specs; that's the team's job on site.
+CONFIRM THE DETAILS: Before you wrap up, briefly read back the key contact details you collected so they can catch any typos — e.g. "Just to confirm I've got it right: Lucas Kearney, 403-555-1234, lucas@email.com, at 123 Main St in Calgary — all correct?" This avoids bad contact info.
+
+Don't ask for measurements or technical specs; that's the team's job on site.
 
 DON'T OVER-QUESTION: You do NOT need a long interview. Once you have the basic problem, their contact info, and ideally a photo, you have enough — move to the consent/close. A good intake can be just a handful of exchanges. Getting them submitted quickly is better than a perfect interview that makes them bail.
 
@@ -287,7 +290,7 @@ When ready to submit (name + contact + project info collected), add at end:
     #mortise-send.active{background:#c9a84c;border-color:#c9a84c;color:#0F1E35;cursor:pointer;}
     #mortise-photo{width:46px;height:46px;border-radius:12px;flex-shrink:0;background:#f8f6f2;border:1px solid #e4e0d8;color:#0F1E35;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;-webkit-tap-highlight-color:transparent;}
     #mortise-photo:hover{border-color:#c9a84c;color:#b8892a;}
-    #mortise-footer{text-align:center;padding:7px;font-size:9px;color:#b8b2a6;background:#fff;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;}
+    #mortise-footer{text-align:center;padding:8px 10px;font-size:9.5px;color:#b8b2a6;background:#fff;letter-spacing:0.06em;text-transform:uppercase;flex-shrink:0;line-height:1.3;}
     .mortise-chips{display:flex;flex-wrap:wrap;gap:8px;padding:4px 6px 6px 44px;}
     .mortise-chip{background:#fff;border:1.5px solid #c9a84c;color:#0F1E35;border-radius:18px;padding:8px 14px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
     .mortise-chip:hover{background:#c9a84c;color:#0F1E35;}
@@ -355,14 +358,14 @@ When ready to submit (name + contact + project info collected), add at end:
           <rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/>
         </svg>
       </button>
-      <textarea id="mortise-input" rows="1" placeholder="Describe your door project..." aria-label="Message"></textarea>
+      <textarea id="mortise-input" rows="1" placeholder="Type your message…" aria-label="Message"></textarea>
       <button id="mortise-send" aria-label="Send">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/>
         </svg>
       </button>
     </div>
-    <div id="mortise-footer">Mortise is an AI assistant and can make mistakes \u00b7 TheDoorPro</div>`;
+    <div id="mortise-footer">Mortise is an AI assistant and can make mistakes</div>`;
   document.body.appendChild(win);
 
   function renderMessages() {
