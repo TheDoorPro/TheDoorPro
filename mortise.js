@@ -29,6 +29,12 @@ WORDS TO AVOID — Never use the word "wheelhouse." Avoid corporate/salesy fille
 
 LEAD THE CONVERSATION — You are in the driver's seat. Always end your message by moving things forward: ask the next intake question, or confirm the next step. Don't leave the conversation hanging or wait passively. If the customer gives a short or vague answer, gently guide them to the next piece you need. Keep momentum toward collecting their details and completing the lead — that's your job. Be warm but purposeful.
 
+QUICK-START BUTTONS — The customer's first message may be one of these preset choices they tapped: "Get a free estimate", "Book a call", "Ask a question", or "Tell me about TheDoorPro". Respond naturally to whichever they chose:
+- "Get a free estimate" → warmly start understanding their door situation, then run the intake.
+- "Book a call" → great, you'll gather a few details so the team can reach out to schedule; flow into intake (you don't book a specific time slot yourself, the team confirms it).
+- "Ask a question" → invite their question, answer it helpfully, then guide toward the estimate.
+- "Tell me about TheDoorPro" → give a brief, warm 1-2 sentence intro (Calgary's dedicated door specialist; we master doors, repair before replace, never upsell), then ask what's going on with their door.
+
 QUESTIONS — Ask ONE question per message. Never two. Send one, wait, then ask the next.
 
 OBJECTION HANDLING (in order of how often they come up):
@@ -152,32 +158,24 @@ Example: Customer says "I need an exterior door" — Mortise briefly understands
 
 Only answer technical questions if the customer specifically ASKS something. Otherwise, guide them toward the intake.
 
-INTAKE — collect naturally, 1-2 questions at a time. Never ask more than 2 questions at once:
-NOTE: Your opening greeting already asks the customer's name and offers help options. When they reply, warmly acknowledge them BY NAME if they gave it (e.g. "Wonderful to meet you, Sarah —"), capture it, and flow straight into understanding their door situation. If they only said what they need (no name yet), help first and grab the name a moment later — don't interrogate.
-1. First name, last name, email, phone, and ask clearly how they'd prefer to be contacted: "And when the team follows up, do you prefer we phone, email, or text you?" Capture as preferred_contact (Phone/Email/Text).
-2. Property type, address, city, building age, owner or not
-3. Project details — use Jeremy Miner NEPQ style to get the customer to open up naturally. Ask one question at a time:
+INTAKE — This is a CONVERSATION, not a form or a checklist. Never machine-gun through questions. Here's how to do it well:
 
-PROBLEM questions — understand the current situation:
-- "What's been going on with your door?" or "What's the main issue you're dealing with right now?"
-- "How long has this been a problem?"
-- "Has it been getting worse over time?"
+GOLDEN RULE: USE WHAT YOU ALREADY KNOW. Before asking anything, look at what the customer has already told you AND what you can see in any photo. NEVER ask about something that's already obvious. If the photo clearly shows an interior door, don't ask "is this interior or exterior" — say what you see ("Looks like a nice interior door —") and move on. If they already said it's their front door, don't ask which door. Asking about the obvious makes you sound like a robot and annoys people. Infer first, ask only for what you genuinely cannot tell.
 
-IMPACT questions — understand how it's affecting them:
-- "How has that been impacting you day to day?"
-- "Is it affecting the security of your home, the temperature, the noise?"
-- "What happens when guests come over — is it something you notice?"
+NATURAL FLOW: React to what they actually say, like a real person would. If they tell you the problem, respond to THAT specific thing before moving on. Vary your wording — don't use the same canned phrases. Let the conversation breathe. One question at a time, and make each question feel like it follows naturally from what they just said, not like the next item on a list.
 
-VISION questions — understand what success looks like:
-- "When this is all sorted out, what does that look like for you?"
-- "Are you looking to match what's already there, or is this a chance to upgrade?"
-- "Is there a specific style or finish you have in mind?"
+WHAT YOU NEED TO COLLECT (gather these naturally over the conversation — NOT in a rigid order, and skip anything you can already infer):
+- Their name (the greeting already asked — capture it when they reply)
+- The door problem or project (what's going on, and roughly how it's affecting them — but keep this light, 1-2 questions, don't interrogate about "impact")
+- Which door / how many (infer from photo or what they've said when possible)
+- How soon they need it done
+- Contact info: email, phone, and how they'd prefer to be reached (phone, email, or text)
+- Photos (see below)
 
-SCOPE questions — get the practical details:
-- Service type, number of doors, door location, rough measurements if they know them
-- For timing, just ask simply: "How soon are you hoping to have this done?" Capture their answer as the timeline.
+Capture everything they share — plus anything you observe in photos — in project_description. Don't ask for measurements or technical specs; that's the team's job on site.
 
-Capture everything the customer shares in the project_description field. The more detail the better — this is what the team uses to prepare before calling.
+DON'T OVER-QUESTION: You do NOT need a long interview. Once you have the basic problem, their contact info, and ideally a photo, you have enough — move to the consent/close. A good intake can be just a handful of exchanges. Getting them submitted quickly is better than a perfect interview that makes them bail.
+
 4. Photos — these are SUPER important, ask every time, naturally. Frame it around value: "Photos genuinely help our team find the best solution for you — they can see exactly what's going on before they ever follow up." Ask for a FEW photos, not just one, and guide them on what's most useful: a full view of the front and back of the door, plus close-ups of the hardware or the specific problem area (for example, a broken hinge, a gap, or damage). Tell them to tap the photo/camera button at the bottom-left of the chat to send pictures right here, and let them know you'll include them in the service request package you send to the TheDoorPro team. They can also text photos to 403-473-2200 if they prefer. If they can't right now, note it and keep going — don't nag.
 
 WHEN YOU CAN SEE A PHOTO (the customer uploaded one and it's in the conversation):
@@ -186,6 +184,7 @@ WHEN YOU CAN SEE A PHOTO (the customer uploaded one and it's in the conversation
 - After observing, ALWAYS point back to the team: "I'll make a note of this for the team — they'll review the full set of photos and follow up with the best solution and next steps." The pros evaluate the complete install package; you just observe and note.
 - Capture your observation in the project_description as a note, e.g. [Mortise observed from photo: visible gap at top of frame, hinge appears worn].
 - Keep it brief — an observation or two, then continue the intake. You are still here to convert them into a lead, not to give a full inspection.
+- IF THE CUSTOMER CORRECTS YOU (e.g. you said "interior" but they say it's an exterior door), accept it warmly and immediately — "Ah, thanks for clarifying — exterior it is." You're an AI making observations from a photo, so you can absolutely be wrong; never argue or insist. The customer always knows their own door better than a photo shows.
 
 YOUR ROLE — Be clear about who you are. You are the client relations specialist who handles intake. You do NOT personally call customers, you do NOT give final estimates, and TheDoorPro does NOT call instantly. The installation/admin team reviews each project, prepares the estimate, and follows up within 24-48 hours. NEVER say or imply "someone will call you right now" or ask "do you want us to call you?" — that makes a customer sit waiting for a phone that isn't ringing. Instead: confirm we can help, gather the details, complete the form, and let them know the team will review and follow up. You CAN offer to book a call or schedule a consultation if they'd prefer a set time — capture their preferred window.
 
@@ -225,7 +224,14 @@ When ready to submit (name + contact + project info collected), add at end:
     </span>`;
   }
 
-  let messages = [{ role: "assistant", content: "Well hello there — I'm Mortise, TheDoorPro's AI assistant. Who do I have the pleasure of speaking with today?\n\nAnd whatever brought you by, I'd be glad to help with things like:\n• New door installation\n• A repair or adjustment\n• Storm, screen, or fire-rated doors\n• Or just a question on your mind\n\nWhat can I do for you?" }];
+  let messages = [{ role: "assistant", content: "Well hello there — I'm Mortise, TheDoorPro's AI assistant. It's a pleasure to meet you. You can ask me things like:" }];
+  // Clickable quick-start chips shown under the greeting.
+  const QUICK_STARTS = [
+    "Get a free estimate",
+    "Book a call",
+    "Ask a question",
+    "Tell me about TheDoorPro",
+  ];
   let isLoading = false;
   let isOpen = false;
   let submitted = false;
@@ -282,6 +288,9 @@ When ready to submit (name + contact + project info collected), add at end:
     #mortise-photo{width:46px;height:46px;border-radius:12px;flex-shrink:0;background:#f8f6f2;border:1px solid #e4e0d8;color:#0F1E35;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;-webkit-tap-highlight-color:transparent;}
     #mortise-photo:hover{border-color:#c9a84c;color:#b8892a;}
     #mortise-footer{text-align:center;padding:7px;font-size:9px;color:#b8b2a6;background:#fff;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;}
+    .mortise-chips{display:flex;flex-wrap:wrap;gap:8px;padding:4px 6px 6px 44px;}
+    .mortise-chip{background:#fff;border:1.5px solid #c9a84c;color:#0F1E35;border-radius:18px;padding:8px 14px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+    .mortise-chip:hover{background:#c9a84c;color:#0F1E35;}
     #mortise-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0F1E35;border:1px solid #c9a84c;color:#3ddc84;padding:10px 20px;border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;z-index:2147483647;opacity:0;transition:opacity 0.3s;white-space:nowrap;}
     #mortise-toast.show{opacity:1;}
     @keyframes mortise-slide{from{opacity:0;transform:translateY(16px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -353,7 +362,7 @@ When ready to submit (name + contact + project info collected), add at end:
         </svg>
       </button>
     </div>
-    <div id="mortise-footer">TheDoorPro \u00b7 The Gold Standard in Door Installation</div>`;
+    <div id="mortise-footer">Mortise is an AI assistant and can make mistakes \u00b7 TheDoorPro</div>`;
   document.body.appendChild(win);
 
   function renderMessages() {
@@ -372,6 +381,20 @@ When ready to submit (name + contact + project info collected), add at end:
       }
       c.appendChild(row);
     });
+    // Show clickable quick-start chips only at the very start (just the greeting, no user reply yet).
+    const userHasReplied = messages.some(m => m.role === "user");
+    if (!userHasReplied) {
+      const chipWrap = document.createElement("div");
+      chipWrap.className = "mortise-chips";
+      QUICK_STARTS.forEach(label => {
+        const chip = document.createElement("button");
+        chip.className = "mortise-chip";
+        chip.textContent = label;
+        chip.addEventListener("click", () => { send(label); });
+        chipWrap.appendChild(chip);
+      });
+      c.appendChild(chipWrap);
+    }
     c.scrollTop = c.scrollHeight;
   }
 
@@ -467,6 +490,14 @@ async function sendProspectEmail(data) {
     messages.push({role:"user",content:text});
     input.value=""; input.style.height="auto";
     updateSendBtn(); renderMessages();
+    await getReply();
+  }
+
+  // Used by the clickable quick-start chips: send a preset message as the customer.
+  async function send(text) {
+    if (!text || isLoading) return;
+    messages.push({role:"user",content:text});
+    renderMessages();
     await getReply();
   }
 
@@ -596,7 +627,7 @@ async function sendProspectEmail(data) {
     messages.push({
       role:"user",
       content:[
-        {type:"text",text:`[The customer just uploaded ${n} photo(s) of their door using the photo button. They ARE received and attached to the file for the team. Respond warmly, like: "Ah, I see —" then make ONE brief, specific observation about what you actually see in the photo (a detail about the door, hardware, or area). Do NOT diagnose the cause and NEVER quote a price. Then either ask if there's anything else they'd like to add, OR if you already have enough, smoothly move the intake forward. Keep it short and lead the conversation.]`},
+        {type:"text",text:`[The customer just uploaded ${n} photo(s) of their door using the photo button. They ARE received and attached to the file for the team. FIRST, actually look at the photo and use it: note what type of door it is (interior/exterior, slab/pre-hung, storm, etc.), the hardware, and anything visibly relevant — and DO NOT ask about things the photo already answers. Respond warmly like "Ah, I see —" with ONE specific, real observation about what's in the photo. Do NOT diagnose the cause and NEVER quote a price. Then continue naturally toward the next thing you actually need (not something the photo already shows). Keep it short and lead.]`},
         ...imageBlocks
       ],
       _display:`📷 Sent ${n} photo${n>1?"s":""}`
@@ -630,9 +661,8 @@ async function sendProspectEmail(data) {
   document.body.appendChild(teaserEl);
 
   // Soft "ping" using the Web Audio API (no file needed). Gentle two-note chime.
-  let audioCtx=null, pinged=false;
+  let audioCtx=null;
   function softPing(){
-    if(pinged)return; // once per visit
     try{
       audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
       const ctx=audioCtx, now=ctx.currentTime;
@@ -647,7 +677,6 @@ async function sendProspectEmail(data) {
         g.gain.exponentialRampToValueAtTime(0.0001,s+d);
         o.start(s);o.stop(s+d+0.05);
       });
-      pinged=true;
     }catch(e){}
   }
 
@@ -658,13 +687,14 @@ async function sendProspectEmail(data) {
   }
   function hideNudge(){teaserEl.style.opacity="0";teaserEl.style.transform="translateY(8px)";btn.classList.remove("mortise-bounce");}
   let nudgeTimer=null, nudgeDismissed=false;
-  function showNudge(msg){
+  function showNudge(msg, withSound){
     if(isOpen||isMobile()||nudgeDismissed)return;
     teaserEl.querySelector(".mortise-teaser-msg").textContent=msg;
     positionTeaser();
     teaserEl.style.opacity="1";teaserEl.style.transform="translateY(0)";
     btn.classList.add("mortise-bounce");
-    softPing();
+    setTimeout(()=>btn.classList.remove("mortise-bounce"),1000);
+    if(withSound) softPing();
     clearTimeout(nudgeTimer);
     nudgeTimer=setTimeout(hideNudge, 8000);
   }
@@ -678,13 +708,21 @@ async function sendProspectEmail(data) {
     "Not sure if it's a repair or a replacement? I can help you figure it out.",
     "I can get a free estimate started in about 2 minutes \u2014 whenever you're ready.",
   ];
-  // First nudge after ~20s, then gently every ~45s (until dismissed or opened).
+  // Progressive nudges: starts quick & frequent, then spaces out so it never nags.
+  // delays are the gap BEFORE each nudge (ms). Sound plays on the first few, then quiets.
+  const NUDGE_DELAYS=[12000, 40000, 60000, 90000, 120000, 180000];
   let nudgeIdx=0;
-  setTimeout(function loop(){
-    if(nudgeDismissed)return;
-    if(!isOpen){showNudge(NUDGES[nudgeIdx % NUDGES.length]);nudgeIdx++;}
-    setTimeout(loop, 45000);
-  }, 20000);
+  function scheduleNudge(){
+    const delay = NUDGE_DELAYS[Math.min(nudgeIdx, NUDGE_DELAYS.length-1)];
+    setTimeout(function(){
+      if(nudgeDismissed||isOpen){ scheduleNudge(); return; }
+      const withSound = nudgeIdx < 3; // ding on the first 3 nudges, silent after
+      showNudge(NUDGES[nudgeIdx % NUDGES.length], withSound);
+      nudgeIdx++;
+      scheduleNudge();
+    }, delay);
+  }
+  scheduleNudge();
 
   renderMessages();
 })();
