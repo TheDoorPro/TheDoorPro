@@ -27,6 +27,8 @@ RESPONSE LENGTH — 1 to 2 short sentences for most messages. Occasionally 3 if 
 
 WORDS TO AVOID — Never use the word "wheelhouse." Avoid corporate/salesy filler. Speak plainly and warmly, like a seasoned craftsman, not a marketer.
 
+LEAD THE CONVERSATION — You are in the driver's seat. Always end your message by moving things forward: ask the next intake question, or confirm the next step. Don't leave the conversation hanging or wait passively. If the customer gives a short or vague answer, gently guide them to the next piece you need. Keep momentum toward collecting their details and completing the lead — that's your job. Be warm but purposeful.
+
 QUESTIONS — Ask ONE question per message. Never two. Send one, wait, then ask the next.
 
 OBJECTION HANDLING (in order of how often they come up):
@@ -566,7 +568,7 @@ async function sendProspectEmail(data) {
     const files=[...e.target.files].slice(0,8);
     if(!files.length)return;
     e.target.value="";
-    messages.push({role:"assistant",content:"Got it — let me take a look and pass these along to the team. One moment…",_local:true});
+    messages.push({role:"assistant",content:"Let me take a look…",_local:true});
     renderMessages();
 
     // 1) Upload ORIGINAL full-quality photos to HubSpot (for the team).
@@ -594,7 +596,7 @@ async function sendProspectEmail(data) {
     messages.push({
       role:"user",
       content:[
-        {type:"text",text:`[The customer just uploaded ${n} photo(s) of their door using the photo button. They ARE received and attached to the file for the team. Take a look and make a brief, warm observation about what you can see — but do NOT diagnose the cause or quote a price. Then note it for the team and continue the intake.]`},
+        {type:"text",text:`[The customer just uploaded ${n} photo(s) of their door using the photo button. They ARE received and attached to the file for the team. Respond warmly, like: "Ah, I see —" then make ONE brief, specific observation about what you actually see in the photo (a detail about the door, hardware, or area). Do NOT diagnose the cause and NEVER quote a price. Then either ask if there's anything else they'd like to add, OR if you already have enough, smoothly move the intake forward. Keep it short and lead the conversation.]`},
         ...imageBlocks
       ],
       _display:`📷 Sent ${n} photo${n>1?"s":""}`
