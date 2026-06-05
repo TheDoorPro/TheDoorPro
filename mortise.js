@@ -1,10 +1,10 @@
 (function () {
   const PORTAL_ID = "244674458";
   const EMAILJS_SERVICE_ID = "TheDoorPro_Mortise_Alert";
-  const EMAILJS_TEMPLATE_ID = "TheDoorPro_Mortise_Email";
+  const EMAILJS_TEMPLATE_ID = "TDP_Mortise_Lead";
   // Second template — sends a friendly confirmation to the PROSPECT after they submit.
   // TODO: create this template in EmailJS and paste its Template ID here.
-  const EMAILJS_PROSPECT_TEMPLATE_ID = "TheDoorPro_Mortise_Confirmation";
+  const EMAILJS_PROSPECT_TEMPLATE_ID = "TDP_Mortise_Confirm";
   const EMAILJS_PUBLIC_KEY = "m5RtY5PsLaIC5Cr7M";
   const FORM_ID = "76f024c1-b367-4ab3-879d-1497bec44c4c";
 
@@ -409,41 +409,42 @@ When ready to submit (name + contact + project info collected), add at end:
   function cleanText(text) { return text.replace(/<<<SUBMIT>>>[\s\S]*?<<<END>>>/g,"").trim(); }
 
 
-async function sendEmailAlert(data, hubspotOk) {
+async function sendEmailAlert(data, hubspotOk, transcript) {
+  // ADMIN alert — goes to your business inbox so you know a lead came in.
   try {
     await emailjs.send(
       "TheDoorPro_Mortise_Alert",
-      "TheDoorPro_Mortise_Email",
+      "TDP_Mortise_Lead",
       {
-        customer_name: (data.firstname || "") + " " + (data.lastname || ""),
+        customer_name: ((data.firstname || "") + " " + (data.lastname || "")).trim() || "Not provided",
         customer_phone: data.phone || "Not provided",
         customer_email: data.email || "Not provided",
         preferred_contact: data.preferred_contact_method || "Not provided",
-        best_time: data.best_contact_time || "Not provided",
         service_type: data.service_type || "Not provided",
-        address: (data.address || "") + " " + (data.city || ""),
+        address: ((data.address || "") + " " + (data.city || "")).trim() || "Not provided",
         project_description: data.project_description || "Not provided",
         timeline: data.timeline || "Not provided",
         customer_notes: data.additional_customer_notes || "None",
+        conversation: transcript || "Not available",
         hubspot_status: hubspotOk ? "SUCCESS - Lead received in HubSpot" : "FAILED - Lead may not be in HubSpot, contact customer directly"
       }
     );
-    console.log("Mortise email alert sent");
+    console.log("Mortise admin alert sent");
   } catch(e) {
-    console.error("EmailJS error:", e);
+    console.error("EmailJS admin error:", e);
   }
 }
 
-async function sendProspectEmail(data) {
-  // Friendly confirmation to the prospect (the same recap Mortise showed them), CC'd to admin.
+async function sendProspectEmail(data, transcript) {
+  // CUSTOMER confirmation — recap of the conversation, sent to the customer.
   if (!data.email) return; // can't email without an address
   try {
     await emailjs.send(
       "TheDoorPro_Mortise_Alert",
-      "TheDoorPro_Mortise_Confirmation",
+      "TDP_Mortise_Confirm",
       {
         to_email: data.email,
-        cc_email: "tdpadmin1@gmail.com",
+        reply_to: "request@thedoorpro.ca",
         customer_name: (data.firstname || "there"),
         full_name: ((data.firstname || "") + " " + (data.lastname || "")).trim() || "Not provided",
         customer_phone: data.phone || "Not provided",
@@ -453,12 +454,12 @@ async function sendProspectEmail(data) {
         address: ((data.address || "") + " " + (data.city || "")).trim() || "Not provided",
         project_description: data.project_description || "Not provided",
         timeline: data.timeline || "Not provided",
-        reply_to: "request@thedoorpro.ca"
+        conversation: transcript || "Not available"
       }
     );
-    console.log("Mortise prospect confirmation sent");
+    console.log("Mortise customer confirmation sent");
   } catch(e) {
-    console.error("EmailJS prospect email error:", e);
+    console.error("EmailJS customer error:", e);
   }
 }
 
@@ -484,6 +485,19 @@ async function sendProspectEmail(data) {
       });
       return res.ok;
     } catch { return false; }
+  }
+
+  // Build a clean, readable transcript of the conversation for the email recap.
+  function buildTranscript() {
+    return messages
+      .filter(m => !m._hidden) // skip internal AI-only notes
+      .map(m => {
+        const who = m.role === "user" ? "Customer" : "Mortise";
+        let txt = m._display ? m._display : (typeof m.content === "string" ? m.content : "");
+        return txt ? `${who}: ${txt}` : "";
+      })
+      .filter(Boolean)
+      .join("\n\n");
   }
 
   async function sendMessage() {
@@ -526,7 +540,7 @@ async function sendProspectEmail(data) {
       const wait = Math.max(0, target - (Date.now() - startedAt));
       await new Promise(r=>setTimeout(r, wait));
       messages.push({role:"assistant",content:clean});
-      if (submitData&&!submitted){submitted=true;const ok=await submitToHubSpot(submitData);if(ok)showToast();await sendEmailAlert(submitData,ok);await sendProspectEmail(submitData);}
+      if (submitData&&!submitted){submitted=true;const ok=await submitToHubSpot(submitData);if(ok)showToast();const transcript=buildTranscript();await sendEmailAlert(submitData,ok,transcript);await sendProspectEmail(submitData,transcript);}
     } catch {
       await new Promise(r=>setTimeout(r, 600));
       messages.push({role:"assistant",content:"Connection issue. Please call 403-473-2200 or email request@thedoorpro.ca."});
