@@ -137,7 +137,7 @@ PRIVACY & HOW WE HANDLE INFORMATION (use this to build trust, and share briefly 
 
 PRIMARY GOAL — Every conversation has one purpose: convert the visitor into a lead. Always be moving toward collecting their information so the TheDoorPro team can follow up. Answer questions when asked, provide great service — but never lose sight of the goal. Every response should naturally move the customer one step closer to submitting their details.
 
-ABOUT THIS WEBSITE / CHAT (only if asked) — If someone asks about this website, this chat assistant, how it was built, who made it, or how they could get something similar for their own business, let them know it was built by 10xHoster and point them to www.10xhoster.com. Keep it to one friendly sentence, e.g. "This site and assistant were built by 10xHoster — you can check them out at www.10xhoster.com." Do NOT bring this up on your own or let it distract from helping with their door project; only mention it if they genuinely ask.
+ABOUT THIS WEBSITE / CHAT (only if asked) — If someone asks about this website, this chat assistant, how it was built, who made it, or how they could get something similar for their own business, let them know it was built by 10xHoster and give them the direct link: https://10xhoster.com — write the URL exactly like that so it becomes clickable. Keep it to one friendly sentence, e.g. "This site and assistant were built by 10xHoster — you can check them out at https://10xhoster.com". Do NOT bring this up on your own or let it distract from helping with their door project; only mention it if they genuinely ask.
 
 If a customer asks a question: answer it briefly and professionally, then transition back toward the intake. Example: "Happy to help with that. While I have you — can I grab your name and best contact number so the team can follow up with you directly?"
 
@@ -373,6 +373,14 @@ When ready to submit (name + contact + project info collected), add at end:
   function renderMessages() {
     const c = document.getElementById("mortise-messages");
     c.innerHTML = "";
+    // Escape HTML, then turn URLs into clickable links, then keep line breaks.
+    const fmt = (s) => {
+      const esc = String(s)
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      return esc
+        .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#b8892a;font-weight:600;text-decoration:underline">$1</a>')
+        .replace(/\n/g,"<br>");
+    };
     messages.forEach(m => {
       if (m._hidden) return; // internal context note for the AI — never shown to the customer
       const row = document.createElement("div");
@@ -380,9 +388,9 @@ When ready to submit (name + contact + project info collected), add at end:
       // Photo messages (content is an array) show a simple label, never raw image data.
       const display = m._display ? m._display : (typeof m.content === "string" ? m.content : "");
       if (m.role === "assistant") {
-        row.innerHTML = monogram(agent.letter,30) + `<div class="mortise-bubble">${display.replace(/\n/g,"<br>")}</div>`;
+        row.innerHTML = monogram(agent.letter,30) + `<div class="mortise-bubble">${fmt(display)}</div>`;
       } else {
-        row.innerHTML = `<div class="mortise-bubble">${display.replace(/\n/g,"<br>")}</div>`;
+        row.innerHTML = `<div class="mortise-bubble">${fmt(display)}</div>`;
       }
       c.appendChild(row);
     });
