@@ -1,0 +1,60 @@
+/* The Hinge — shared theme overrides. Active only when <html data-theme="light">.
+   Light mode flips the WHOLE page light, including the top header bar and menus. */
+html[data-theme="light"]{
+  --bg:#f4f1e9; --panel:#ffffff; --panel-2:#faf8f2; --field:#ffffff;
+  --surface:#f4f1e9; --card:#ffffff; --ink:#ffffff; --ink-2:#faf8f2;
+  --text:#1c2024; --parchment:#1c2024; --muted:#6b7178;
+  --line:#d9d2c2; --line-soft:#e6e0d2; --shadow:0 8px 24px rgba(0,0,0,.10);
+}
+/* page background (kill dark radial washes) */
+html[data-theme="light"] html,
+html[data-theme="light"] body{ background:var(--bg) !important; }
+
+/* top header bar -> light */
+html[data-theme="light"] header,
+html[data-theme="light"] .topbar{
+  background:var(--panel) !important;
+  border-bottom:1px solid var(--line) !important;
+  color:var(--text) !important;
+  box-shadow:0 1px 0 var(--line-soft);
+}
+html[data-theme="light"] .brand,
+html[data-theme="light"] .brand .wm,
+html[data-theme="light"] .brand .wordmark,
+html[data-theme="light"] header .wordmark{ color:var(--text) !important; }
+html[data-theme="light"] .wordmark .by,
+html[data-theme="light"] .brand .by{ color:var(--muted) !important; }
+
+/* burger dropdown menus -> light panel */
+html[data-theme="light"] .tnav-menu,
+html[data-theme="light"] .menu{
+  background:var(--panel) !important;
+  border:1px solid var(--line) !important;
+  box-shadow:var(--shadow) !important;
+}
+html[data-theme="light"] .tnav-menu a,
+html[data-theme="light"] .menu a{ color:var(--text) !important; }
+html[data-theme="light"] .tnav-div,
+html[data-theme="light"] .menu .div{ background:var(--line-soft) !important; }
+
+/* form fields (many pages hardcode dark) */
+html[data-theme="light"] input,
+html[data-theme="light"] select,
+html[data-theme="light"] textarea{
+  background:#ffffff !important; color:#1c2024 !important; border-color:#d9d2c2 !important;
+}
+/* secondary grey buttons would be dark-on-dark */
+html[data-theme="light"] .btn{
+  background:#efeadb !important; color:#1c2024 !important; border-color:#d9d2c2 !important;
+}
+
+/* consistent header back arrow (all pages) */
+.hback{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-size:18px;flex:0 0 auto}
+.hback:hover{border-color:var(--brass,#b5853a)}
+/* GST chip readable in light mode (off state) */
+html[data-theme="light"] .taxchip:not(.on){background:#efeadb !important;color:#6b7178 !important}
+
+/* keep printouts white even in light theme */
+@media print{
+  html[data-theme="light"] html, html[data-theme="light"] body{ background:#ffffff !important; }
+}

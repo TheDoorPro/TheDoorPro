@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#15181c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Hinge">
+<script>try{var t=localStorage.getItem('hinge-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<title>Scribe Data — TheDoorPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#15181c; --panel:#20262c; --panel-2:#262d35;
+  --brass:#b5893f; --brass-hi:#e6c47e; --brass-deep:#7e5e27;
+  --text:#e8e2d5; --parchment:#ece4d4; --muted:#969ca5; --green:#43b888; --red:#e06a5b;
+  --line:rgba(230,196,126,.16); --line-soft:rgba(255,255,255,.07);
+  --mono:ui-monospace,"SF Mono","SFMono-Regular",Menlo,Consolas,monospace;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  /* back-compat aliases (any stray refs stay on-theme) */
+  --ink:#e8e2d5; --ink-2:#262d35; --surface:#15181c; --card:#20262c;
+  --brass-dk:#e6c47e; --brass-lt:#e6c47e; --brass-tint:rgba(230,196,126,.08); --line2:rgba(255,255,255,.07);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:radial-gradient(1100px 560px at 50% -14%,#20262d 0%,rgba(32,38,45,0) 60%),var(--bg);color:var(--text);font-family:var(--sans);font-size:15px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit;font-size:14px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--brass-hi);outline-offset:1px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+a{color:var(--brass-hi)}
+header{background:linear-gradient(180deg,#1b1f24,#15181c);border-bottom:1px solid var(--line-soft);padding:13px 18px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px}
+.bdot{width:9px;height:9px;border-radius:50%;background:linear-gradient(180deg,var(--brass-hi),var(--brass-deep));box-shadow:0 0 0 3px rgba(230,196,126,.10)}
+.wm{font-family:"Fraunces",serif;font-weight:600;font-size:21px;color:var(--parchment);letter-spacing:-.01em}
+.wm em{font-style:italic;color:var(--brass-hi)}
+.hd-right{display:flex;align-items:center;gap:12px}
+.sync{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:#6b7280}
+.dot.ok{background:var(--green)}.dot.save{background:var(--brass-hi)}.dot.off{background:#6b7280}
+
+.tnav-so{color:#969ca5;text-decoration:none;font-size:12.5px;border:1px solid rgba(255,255,255,.08);padding:7px 12px;border-radius:9px}
+.tnav-so:hover{color:#ece4d4;border-color:rgba(230,196,126,.30)}
+.tnav-burger{width:42px;height:38px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:rgba(255,255,255,.02);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer}
+.tnav-burger span{display:block;width:18px;height:2px;border-radius:2px;background:#e6c47e;transition:.22s}
+.tnav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.tnav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.tnav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.tnav-menu{position:fixed;top:60px;right:16px;width:240px;z-index:300;background:linear-gradient(180deg,#262d35,#20262c);border:1px solid rgba(230,196,126,.18);border-radius:14px;box-shadow:0 18px 40px -22px rgba(0,0,0,.8);padding:8px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.2s;font-family:"Inter",system-ui,sans-serif}
+.tnav-menu.open{opacity:1;visibility:visible;transform:translateY(0)}
+.tnav-menu a,.tnav-menu .tnav-dis{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:9px;text-decoration:none;color:#ece4d4;font-size:14px;font-weight:500}
+.tnav-menu a:hover{background:rgba(230,196,126,.08)}
+.tnav-menu .tnav-dis{color:#969ca5}
+.tnav-tag{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:3px 8px;border-radius:14px}
+.tnav-tag.admin{color:#11141a;background:linear-gradient(180deg,#e6c47e,#b5893f)}
+.tnav-tag.soon{color:#969ca5;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.tnav-div{height:1px;background:rgba(255,255,255,.07);margin:6px 8px}
+
+.tabs{background:var(--panel);padding:0 18px;display:flex;gap:4px;position:sticky;top:59px;z-index:90;border-bottom:1px solid var(--line-soft)}
+.tab{padding:12px 16px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;letter-spacing:.02em}
+.tab.on{color:var(--parchment);border-bottom-color:var(--brass)}
+main{max-width:1100px;margin:0 auto;padding:22px 18px 64px}
+.view{display:none}.view.on{display:block}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.toolbar input.search{flex:1;min-width:200px;border:1px solid var(--line-soft);border-radius:10px;padding:11px 13px;background:var(--panel);color:var(--text)}
+.toolbar input.search::placeholder{color:var(--muted)}
+.addbtn{background:linear-gradient(180deg,var(--brass-hi),var(--brass));color:#15110a;font-weight:700;font-size:13px;padding:10px 15px;border-radius:10px}
+.addbtn:hover{filter:brightness(1.06)}
+.intro{font-size:12.5px;color:var(--muted);margin:-6px 0 16px}
+.group{margin-bottom:28px}
+.group-h{font-family:"Fraunces",serif;font-style:italic;font-size:18px;font-weight:600;color:var(--brass-hi);border-bottom:1px solid var(--line-soft);padding:4px 2px 10px;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.group-h .pill{font-family:var(--sans);font-style:normal;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em}
+.panels{column-gap:18px}
+@media(min-width:820px){.panels.two{column-count:2}}
+.cat{break-inside:avoid;margin-bottom:14px;background:var(--panel);border:1px solid var(--line-soft);border-radius:12px;overflow:hidden}
+.cat-h{background:rgba(230,196,126,.07);color:var(--brass-hi);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:8px 11px;border-bottom:1px solid var(--line-soft)}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--panel-2);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line-soft)}
+thead th.r{text-align:right}
+tbody td{border-bottom:1px solid var(--line-soft);padding:0}
+tbody tr:last-child td{border-bottom:none}
+td input{width:100%;border:none;background:transparent;padding:9px;font-size:13.5px;color:var(--text)}
+td input:focus{background:rgba(230,196,126,.08);outline:none;box-shadow:inset 0 0 0 2px var(--brass-deep)}
+td input::placeholder{color:#6b7280}
+td.rate input,td.cost input,td.mu input{text-align:right;font-family:var(--mono)}
+td.unit{width:74px} td.rate{width:74px} td.mu{width:58px} td.cost{width:84px}
+td.del{width:34px;text-align:center}
+.del-x{color:#6b7280;font-size:15px;padding:6px;line-height:1}
+.del-x:hover{color:var(--red)}
+.cat-add{display:block;width:100%;text-align:left;padding:9px 11px;font-size:12px;font-weight:700;color:var(--brass-hi);background:rgba(255,255,255,.02);border-top:1px solid var(--line-soft)}
+.cat-add:hover{background:rgba(230,196,126,.08)}
+.scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line-soft);border-radius:12px}
+table.wide{min-width:720px}
+table.wide thead th{position:sticky;top:0}
+table.wide td.name{min-width:180px} table.wide td.sup{min-width:120px} table.wide td.link{min-width:200px}
+.lnk{color:var(--brass-hi);font-weight:700;text-decoration:none;font-size:12px;white-space:nowrap;padding:0 6px}
+.rates{max-width:520px;background:var(--panel);border:1px solid var(--line-soft);border-radius:12px;overflow:hidden}
+.rates .rrow{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line-soft)}
+.rates .rrow:last-child{border-bottom:none}
+.rates label{font-size:13px;color:var(--text)}
+.rates input{width:110px;text-align:right;border:1px solid var(--line-soft);border-radius:8px;padding:8px 9px;font-family:var(--mono);background:var(--panel-2);color:var(--text)}
+.rates .grp{background:var(--panel-2);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-hi);font-weight:700;padding:8px 14px}
+.note{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5;max-width:560px}
+.note b{color:var(--text)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:30px;background:var(--panel-2);color:var(--text);border:1px solid var(--line);padding:10px 18px;border-radius:24px;font-size:13px;font-weight:600;z-index:400;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.empty{color:var(--muted);font-size:13px;padding:18px;text-align:center}
+html[data-theme="light"]{--bg:#f4f1e9;--panel:#ffffff;--panel-2:#faf8f2;--line:#d9d2c2;--line-soft:#e6e0d2;--text:#1c2024;--parchment:#1c2024;--muted:#6b7178;--shadow:0 8px 24px rgba(0,0,0,.12)}
+</style>
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<header>
+  <div class="brand" style="cursor:pointer" onclick="location.href='/index.html'"><span class="bdot"></span><span class="wm">Scribe <em>Data</em></span></div>
+  <div class="hd-right">
+    <div class="sync"><span class="dot" id="syncDot"></span><span id="syncTxt">…</span></div>
+    <a class="hback" href="/index.html" title="Back" onclick="if(history.length>1){history.back();return false}">&#8592;</a>
+      <button class="tnav-burger" id="tnavBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="tnav-menu" id="tnavMenu" aria-label="Go to">
+    <a href="/profile.html">My Profile</a>
+    <a href="/customers.html?new=1">Add New Customer</a>
+    <a href="/customers.html">View all customers</a>
+    <a href="/scribe.html?quick=1">Quick Estimate</a>
+    <a href="/settings.html">Settings</a>
+    <div class="tnav-div" role="separator"></div>
+    <a href="/cdn-cgi/access/logout" class="tnav-signout">Sign out</a>
+  </nav>
+</header>
+<div class="tabs">
+  <button class="tab on" data-view="vServices">Services</button>
+  <button class="tab" data-view="vMaterials">Materials</button>
+  <button class="tab" data-view="vRates">Rates &amp; fees</button>
+</div>
+
+<main>
+  <div class="view on" id="vServices">
+    <div class="toolbar">
+      <input class="search" id="svcSearch" placeholder="Search services…">
+      <button class="addbtn" data-addgrp="Door">+ Door service</button>
+      <button class="addbtn" data-addgrp="Handyman">+ Handyman service</button>
+    </div>
+    <p class="intro">Grouped by category, like the master sheet. Click any cell to edit — changes save and sync automatically.</p>
+    <div id="svcDoor"></div>
+    <div id="svcHandy"></div>
+    <div id="svcCustom"></div>
+  </div>
+
+  <div class="view" id="vMaterials">
+    <div class="toolbar">
+      <input class="search" id="matSearch" placeholder="Search materials…">
+      <button class="addbtn" id="addMat">+ Add material</button>
+    </div>
+    <p class="intro">Materials you buy and resell. Add a product link to jump to the supplier and check current pricing.</p>
+    <div id="pendingWrap" style="display:none;margin-bottom:20px">
+      <h2 style="font-size:13px;letter-spacing:.04em;margin:0 0 4px;color:var(--brass-hi)">&#9873; Pending review — submitted by Sales <span id="pendCount" style="font-weight:700"></span></h2>
+      <div class="scroll" style="border-color:var(--brass)"><table class="wide" style="min-width:780px"><thead><tr>
+        <th class="name">Material</th><th>Category</th><th>Supplier</th><th>SKU</th><th class="r">Cost</th><th class="r">MU %</th><th>Link</th><th>Action</th>
+      </tr></thead><tbody id="pendBody"></tbody></table></div>
+      <p class="note">Submitted from the field. Verify the cost against the link, set a category and markup, then <b>Approve</b> to publish it to the catalog (or delete it).</p>
+    </div>
+    <div class="scroll"><table class="wide"><thead><tr>
+      <th class="name">Material</th><th>Category</th><th>Supplier</th><th>SKU</th><th class="r">Cost</th><th class="r">MU %</th><th>Link</th><th></th>
+    </tr></thead><tbody id="matBody"></tbody></table></div>
+  </div>
+
+  <div class="view" id="vRates">
+    <div class="rates" id="ratesBox"></div>
+    <p class="note">Percentages are plain numbers (15 = 15%, 2.9 = 2.9%). These feed every estimate. Changing a rate here updates Scribe on your next estimate.</p>
+    <h2 style="font-size:13px;letter-spacing:.04em;margin:26px 0 10px">Payment methods &amp; fees</h2>
+    <div class="scroll"><table class="wide" style="min-width:460px"><thead><tr>
+      <th class="name">Method (what the associate sees)</th><th class="r">Fee %</th><th class="r">Fee $ fixed</th><th></th>
+    </tr></thead><tbody id="payBody"></tbody></table></div>
+    <button class="addbtn" id="addPay" style="margin-top:10px">+ Add payment method</button>
+    <p class="note">On an estimate, the associate just picks the method. Any fee here is added <b>on top, to the customer</b> (so a card surcharge never eats your margin). Keep Cash and E-transfer at 0. The word “Stripe” never appears on the estimate side.</p>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const DEFAULTS={vehRate:0.73,vanDay:19.95,vanKm:0.99,cubeDay:29.95,cubeKm:0.99,markup:15,ins:2,wcb:2,stripe:2.9,stripeFixed:0.30,gst:5,hmin:135,contractor:15};
+const PAYDEF=[{label:"Cash",pct:0,fixed:0},{label:"E-transfer",pct:0,fixed:0},{label:"Debit",pct:1.5,fixed:0},{label:"Credit card",pct:2.9,fixed:0.30}];
+const BUILTIN=[
+ ["Site Consultation & Measure","Door","Interior","visit",95],["Hang Prehung Interior Door (Hollow-Core)","Door","Interior","door",120],
+ ["Hang Prehung Interior Door (Solid-Core)","Door","Interior","door",150],["Hang Prehung French / Double Door","Door","Interior","opening",250],
+ ["Hang Pre-Machined Slab in Existing Frame","Door","Interior","door",90],["Prep & Hang Interior Slab (full)","Door","Interior","door",185],
+ ["Mortise Hinges (up to 3)","Door","Interior","door",55],["Bore for Knob + Latch","Door","Interior","door",40],
+ ["Trim / Cut Down Slab to Size","Door","Interior","door",35],["Install Bifold Door","Door","Interior","opening",85],
+ ["Install Bypass / Closet Sliding Doors","Door","Interior","opening",110],["Install Barn Door (track + slab)","Door","Interior","opening",180],
+ ["Install Pocket Door (existing frame)","Door","Interior","opening",150],["Pet Door Cutout & Fit","Door","Interior","door",120],
+ ["Remove & Haul Old Interior Door","Door","Interior","door",35],["Interior Threshold / Transition Strip","Door","Interior","each",55],
+ ["Hang Prehung Exterior / Entry Door","Door","Exterior","door",250],["Install Exterior Slab (prep + hang)","Door","Exterior","door",325],
+ ["Install Patio / Exterior French Door","Door","Exterior","opening",375],["Storm Door Install","Door","Exterior","door",200],
+ ["Security / Steel Door Install","Door","Exterior","door",275],["Exterior Threshold / Sill Replacement","Door","Exterior","each",110],
+ ["Weatherstripping Replacement","Door","Exterior","door",45],["Door Sweep Replacement","Door","Exterior","each",35],
+ ["Astragal / Double-Door Seal Install","Door","Exterior","each",55],["Caulk & Seal Exterior Door","Door","Exterior","door",45],
+ ["Doorknob / Lever Replacement","Door","Hardware","each",55],["Deadbolt Install (new bore)","Door","Hardware","each",65],
+ ["Smart Lock Install","Door","Hardware","each",90],["Door Closer Install","Door","Hardware","each",75],
+ ["Hinge Replacement","Door","Hardware","hinge",25],["Mortise + Install Single Hinge","Door","Hardware","hinge",30],
+ ["Latch / Strike Plate Adjustment","Door","Hardware","door",45],["Install Door Viewer / Peephole","Door","Hardware","each",35],
+ ["Doorbell Camera Install","Door","Hardware","each",120],["Diagnostic / Repair Assessment","Door","Repairs","hour",85],
+ ["Adjust / Realign Sticking Door","Door","Repairs","door",75],["Plane / Trim Binding Door","Door","Repairs","door",65],
+ ["Re-Mortise / Fix Botched Hinge","Door","Repairs","hour",85],["Wood Fill / Patch Damaged Door","Door","Repairs","hour",85],
+ ["Re-Hang Fallen / Loose Door","Door","Repairs","door",90],["Frame / Jamb Repair","Door","Repairs","hour",85],
+ ["Sand & Prep Slab (shop)","Door","Shop Finishing","door",40],["Paint Door — 2 coats, both sides","Door","Shop Finishing","door",65],
+ ["Primer Coat","Door","Shop Finishing","door",30],["Stain & Finish","Door","Shop Finishing","door",95],
+ ["First Hour / Minimum Visit","Handyman","Rates","job",135],["Each Additional Hour","Handyman","Rates","hour",85],
+ ["Half-Day (up to 4 hrs)","Handyman","Rates","block",375],["Full-Day (up to 8 hrs)","Handyman","Rates","block",690],
+ ["Mount TV (existing wall)","Handyman","Flat-Rate Tasks","each",120],["Furniture Assembly","Handyman","Flat-Rate Tasks","item",60],
+ ["Install Floating Shelf","Handyman","Flat-Rate Tasks","each",45],["Install Shelving / Closet Organizer","Handyman","Flat-Rate Tasks","unit",90],
+ ["Install Curtain Rods / Blinds","Handyman","Flat-Rate Tasks","window",45],["Install Bathroom Hardware (towel bar, etc.)","Handyman","Flat-Rate Tasks","each",35],
+ ["Window Screen Repair / Rescreen","Handyman","Flat-Rate Tasks","screen",60],["Window Screen Frame Rebuild","Handyman","Flat-Rate Tasks","screen",85],
+ ["Cabinet Door / Drawer Repair","Handyman","Flat-Rate Tasks","each",55],["Gate Adjustment / Repair","Handyman","Flat-Rate Tasks","gate",85],
+ ["Re-Caulking (tub / window / trim)","Handyman","Flat-Rate Tasks","area",65],["Drywall Patch (small)","Handyman","Flat-Rate Tasks","patch",75],
+ ["Drywall Patch (large / sheet)","Handyman","Flat-Rate Tasks","patch",150],["Interior Painting (per room)","Handyman","Flat-Rate Tasks","room",250],
+ ["Baseboard Install","Handyman","Per-Unit / Bulk","lin ft",4],["Crown Moulding Install","Handyman","Per-Unit / Bulk","lin ft",7],
+ ["Quarter Round / Shoe Moulding","Handyman","Per-Unit / Bulk","lin ft",3],["Window / Door Casing & Trim","Handyman","Per-Unit / Bulk","opening",65],
+ ["Install Cabinet Hardware","Handyman","Per-Unit / Bulk","piece",12],["Hang Pictures / Mirrors / Art","Handyman","Per-Unit / Bulk","item",25],
+ ["Install Door Stop / Bumpers","Handyman","Per-Unit / Bulk","each",20],["Wainscoting / Accent Wall","Handyman","Hourly Tasks","hour",85],
+ ["Weatherproofing / Draft Sealing","Handyman","Hourly Tasks","hour",85],["Minor Flooring Repair","Handyman","Hourly Tasks","hour",85],
+ ["Fence Board / Picket Repair","Handyman","Hourly Tasks","hour",85],["Deck Board Replacement","Handyman","Hourly Tasks","hour",85],
+ ["Paint Touch-Up","Handyman","Hourly Tasks","hour",85],
+].map(a=>({n:a[0],g:a[1],c:a[2],u:a[3],r:a[4]}));
+
+let master={catalog:BUILTIN.map(x=>Object.assign({},x)),materials:[],settings:Object.assign({},DEFAULTS),payments:PAYDEF.map(x=>Object.assign({},x))};
+let S=master.settings;
+
+const Cache=(function(){const cloud=(typeof window!=="undefined"&&window.storage&&typeof window.storage.get==="function");
+  return{async get(k){if(cloud){try{const r=await window.storage.get(k);return r?r.value:null;}catch(e){return null;}}try{return localStorage.getItem(k);}catch(e){return null;}},
+    async set(k,v){if(cloud){try{await window.storage.set(k,v);}catch(e){}return;}try{localStorage.setItem(k,v);}catch(e){}}};})();
+let syncMode="local";
+const Api={async load(){try{const r=await fetch("/api/data",{cache:"no-store"});if(r.ok)return await r.json();}catch(e){}return null;},
+  async save(b){try{const r=await fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});return r.ok;}catch(e){return false;}}};
+function setSync(s){const d=$("#syncDot"),t=$("#syncTxt");
+  if(s==="ok"){d.className="dot ok";t.textContent=syncMode==="server"?"Synced":"Saved locally";}
+  else if(s==="save"){d.className="dot save";t.textContent="Saving…";}else{d.className="dot off";t.textContent="Offline";}}
+let saveT;
+function save(){const blob={catalog:master.catalog,materials:master.materials,settings:master.settings,payments:master.payments};
+  Cache.set("master:scribe",JSON.stringify(blob));
+  if(syncMode==="server"){setSync("save");clearTimeout(saveT);saveT=setTimeout(async()=>{const ok=await Api.save(blob);setSync(ok?"ok":"off");},600);}else setSync("ok");}
+
+function num(v){const x=parseFloat(v);return isFinite(x)?x:0;}
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function $(s){return document.querySelector(s);}
+function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1300);}
+
+/* tabs */
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));$("#"+b.dataset.view).classList.add("on");}));
+
+/* ---- services: grouped tables ---- */
+function catOrder(group){const seen=[];master.catalog.forEach(it=>{if(it.g===group&&seen.indexOf(it.c)<0)seen.push(it.c);});return seen;}
+function renderServices(){
+  const f=($("#svcSearch").value||"").toLowerCase().trim();
+  master.catalog.forEach((it,i)=>it._i=i);
+  renderGroup("Door",$("#svcDoor"),f,true);
+  renderGroup("Handyman",$("#svcHandy"),f,true);
+  // any other groups (Custom etc.)
+  const others=[...new Set(master.catalog.map(x=>x.g))].filter(g=>g!=="Door"&&g!=="Handyman");
+  const box=$("#svcCustom");box.innerHTML="";
+  others.forEach(g=>{const d=el("div");box.appendChild(d);renderGroup(g,d,f,false);});
+}
+function renderGroup(group,container,filter,twoCol){
+  container.innerHTML="";
+  const items=master.catalog.filter(it=>it.g===group&&(!filter||it.n.toLowerCase().indexOf(filter)>=0||(""+it.c).toLowerCase().indexOf(filter)>=0));
+  if(!items.length&&filter)return;
+  const wrap=el("div","group");
+  wrap.appendChild(el("div","group-h",esc(group)+' <span class="pill">'+items.length+' items</span>'));
+  const panels=el("div","panels"+(twoCol?" two":""));
+  catOrder(group).forEach(cat=>{
+    const catItems=items.filter(it=>it.c===cat);
+    if(!catItems.length)return;
+    const card=el("div","cat");
+    card.appendChild(el("div","cat-h",esc(cat)));
+    const tbl=el("table",null,'<thead><tr><th>Service</th><th class="unit">Unit</th><th class="r">Rate</th><th></th></tr></thead>');
+    const tb=el("tbody");
+    catItems.forEach(it=>{const i=it._i;const tr=el("tr");
+      tr.innerHTML='<td><input data-sn="'+i+'" value="'+esc(it.n)+'"></td>'+
+        '<td class="unit"><input data-su="'+i+'" value="'+esc(it.u)+'"></td>'+
+        '<td class="rate"><input class="num" data-sr="'+i+'" inputmode="decimal" value="'+esc(it.r)+'"></td>'+
+        '<td class="del"><button class="del-x" data-sdel="'+i+'" title="Delete">✕</button></td>';
+      tb.appendChild(tr);});
+    tbl.appendChild(tb);card.appendChild(tbl);
+    const add=el("button","cat-add","+ add to "+esc(cat));
+    add.addEventListener("click",()=>{master.catalog.push({n:"New item",g:group,c:cat,u:"each",r:0});save();renderServices();});
+    card.appendChild(add);
+    panels.appendChild(card);
+  });
+  wrap.appendChild(panels);
+  container.appendChild(wrap);
+}
+$("#vServices").addEventListener("input",e=>{const d=e.target.dataset;
+  if(d.sn!=null){master.catalog[+d.sn].n=e.target.value;save();}
+  else if(d.su!=null){master.catalog[+d.su].u=e.target.value;save();}
+  else if(d.sr!=null){master.catalog[+d.sr].r=num(e.target.value);save();}});
+$("#vServices").addEventListener("click",e=>{const d=e.target.dataset;
+  if(d.sdel!=null){const it=master.catalog[+d.sdel];if(confirm('Delete "'+(it?it.n:"")+'"?')){master.catalog.splice(+d.sdel,1);save();renderServices();toast("Deleted");}}});
+$("#svcSearch").addEventListener("input",renderServices);
+document.querySelectorAll("[data-addgrp]").forEach(b=>b.addEventListener("click",()=>{
+  const g=b.dataset.addgrp;const cats=catOrder(g);const c=cats[0]||"General";
+  master.catalog.push({n:"New item",g:g,c:c,u:"each",r:0});save();$("#svcSearch").value="";renderServices();
+  window.scrollTo({top:0,behavior:"smooth"});toast("Row added to "+g+" · "+c);}));
+
+/* ---- materials ---- */
+function renderMaterials(){
+  renderPending();
+  const f=($("#matSearch").value||"").toLowerCase().trim();
+  const tb=$("#matBody");tb.innerHTML="";
+  const rows=master.materials.map((m,i)=>({m,i})).filter(o=>o.m.status!=="pending"&&(!f||o.m.name.toLowerCase().indexOf(f)>=0||(""+(o.m.sup||"")).toLowerCase().indexOf(f)>=0||(""+(o.m.cat||"")).toLowerCase().indexOf(f)>=0));
+  if(!rows.length){tb.innerHTML='<tr><td colspan="8"><div class="empty">No materials yet. Click “+ Add material”.</div></td></tr>';return;}
+  rows.forEach(({m,i})=>{const tr=el("tr");
+    tr.innerHTML='<td class="name"><input data-mn="'+i+'" value="'+esc(m.name)+'"></td>'+
+      '<td class="sup"><input data-mcat="'+i+'" value="'+esc(m.cat)+'" placeholder="e.g. Door hardware"></td>'+
+      '<td class="sup"><input data-mp="'+i+'" value="'+esc(m.sup)+'"></td>'+
+      '<td><input data-mk="'+i+'" value="'+esc(m.sku)+'"></td>'+
+      '<td class="cost"><input class="num" data-mc="'+i+'" inputmode="decimal" value="'+esc(m.cost)+'"></td>'+
+      '<td class="mu"><input class="num" data-mm="'+i+'" inputmode="decimal" value="'+esc(m.mu)+'"></td>'+
+      '<td class="link"><input data-ml="'+i+'" value="'+esc(m.link)+'" placeholder="https://…">'+
+        (m.link?' <a class="lnk" href="'+esc(m.link)+'" target="_blank" rel="noopener">↗</a>':'')+'</td>'+
+      '<td class="del"><button class="del-x" data-md="'+i+'" title="Delete">✕</button></td>';
+    tb.appendChild(tr);});
+}
+function renderPending(){const wrap=$("#pendingWrap"),tb=$("#pendBody");if(!tb)return;
+  const rows=master.materials.map((m,i)=>({m,i})).filter(o=>o.m.status==="pending");
+  wrap.style.display=rows.length?"block":"none";
+  $("#pendCount").textContent=rows.length?("("+rows.length+")"):"";
+  tb.innerHTML="";
+  rows.forEach(({m,i})=>{const tr=el("tr");
+    tr.innerHTML='<td class="name"><input data-mn="'+i+'" value="'+esc(m.name)+'"></td>'+
+      '<td class="sup"><input data-mcat="'+i+'" value="'+esc(m.cat)+'" placeholder="set category"></td>'+
+      '<td class="sup"><input data-mp="'+i+'" value="'+esc(m.sup)+'"></td>'+
+      '<td><input data-mk="'+i+'" value="'+esc(m.sku)+'"></td>'+
+      '<td class="cost"><input class="num" data-mc="'+i+'" inputmode="decimal" value="'+esc(m.cost)+'"></td>'+
+      '<td class="mu"><input class="num" data-mm="'+i+'" inputmode="decimal" value="'+esc(m.mu)+'"></td>'+
+      '<td class="link"><input data-ml="'+i+'" value="'+esc(m.link)+'" placeholder="https://…">'+
+        (m.link?' <a class="lnk" href="'+esc(m.link)+'" target="_blank" rel="noopener">↗</a>':'')+'</td>'+
+      '<td style="white-space:nowrap"><button class="addbtn" data-mapprove="'+i+'" style="padding:6px 10px;font-size:12px">Approve</button> '+
+        '<button class="del-x" data-md="'+i+'" title="Reject">✕</button></td>';
+    tb.appendChild(tr);});
+}
+$("#pendBody").addEventListener("input",e=>{const d=e.target.dataset;
+  if(d.mn!=null){master.materials[+d.mn].name=e.target.value;save();}
+  else if(d.mcat!=null){master.materials[+d.mcat].cat=e.target.value;save();}
+  else if(d.mp!=null){master.materials[+d.mp].sup=e.target.value;save();}
+  else if(d.mk!=null){master.materials[+d.mk].sku=e.target.value;save();}
+  else if(d.mc!=null){master.materials[+d.mc].cost=num(e.target.value);save();}
+  else if(d.mm!=null){master.materials[+d.mm].mu=num(e.target.value);save();}
+  else if(d.ml!=null){master.materials[+d.ml].link=e.target.value;save();}});
+$("#pendBody").addEventListener("click",e=>{const d=e.target.dataset;
+  if(d.mapprove!=null){const m=master.materials[+d.mapprove];if(!m.name){toast("Give it a name first");return;}m.status="approved";save();renderMaterials();toast("Approved & published");}
+  else if(d.md!=null){const m=master.materials[+d.md];if(confirm('Reject "'+(m?m.name:"")+'"?')){master.materials.splice(+d.md,1);save();renderMaterials();toast("Rejected");}}});
+$("#matBody").addEventListener("input",e=>{const d=e.target.dataset;
+  if(d.mn!=null){master.materials[+d.mn].name=e.target.value;save();}
+  else if(d.mcat!=null){master.materials[+d.mcat].cat=e.target.value;save();}
+  else if(d.mp!=null){master.materials[+d.mp].sup=e.target.value;save();}
+  else if(d.mk!=null){master.materials[+d.mk].sku=e.target.value;save();}
+  else if(d.mc!=null){master.materials[+d.mc].cost=num(e.target.value);save();}
+  else if(d.mm!=null){master.materials[+d.mm].mu=num(e.target.value);save();}
+  else if(d.ml!=null){master.materials[+d.ml].link=e.target.value;save();}});
+$("#matBody").addEventListener("click",e=>{const d=e.target.dataset;
+  if(d.md!=null){const m=master.materials[+d.md];if(confirm('Delete "'+(m?m.name:"")+'"?')){master.materials.splice(+d.md,1);save();renderMaterials();toast("Deleted");}}});
+$("#matSearch").addEventListener("input",renderMaterials);
+$("#addMat").addEventListener("click",()=>{master.materials.unshift({id:"mat_"+Date.now(),name:"New material",cat:"",sup:"",sku:"",cost:0,mu:S.markup,link:"",status:"approved"});save();$("#matSearch").value="";renderMaterials();toast("Material added");});
+
+/* ---- rates ---- */
+const RATE_DEF=[["Travel"],["vehRate","Personal vehicle $/km"],["vanDay","Truck/Van day $"],["vanKm","Truck/Van $/km"],
+  ["cubeDay","Cube day $"],["cubeKm","Cube $/km"],["Defaults & fees"],["markup","Default material markup %"],
+  ["ins","Liability insurance % of revenue"],["wcb","WCB % of labour"],["gst","GST %"],["hmin","Handyman minimum $"],["contractor","Contractor labour discount %"]];
+function renderRates(){const box=$("#ratesBox");box.innerHTML="";
+  RATE_DEF.forEach(r=>{if(r.length===1){box.appendChild(el("div","grp",r[0]));return;}
+    const row=el("div","rrow");row.innerHTML='<label>'+r[1]+'</label><input class="num" data-rk="'+r[0]+'" inputmode="decimal" value="'+esc(S[r[0]])+'">';
+    box.appendChild(row);});}
+$("#ratesBox").addEventListener("input",e=>{const k=e.target.dataset.rk;if(k){S[k]=num(e.target.value);save();}});
+
+function renderPayments(){const tb=$("#payBody");if(!tb)return;tb.innerHTML="";
+  (master.payments||[]).forEach((p,i)=>{const tr=el("tr");
+    tr.innerHTML='<td class="name"><input data-pl="'+i+'" value="'+esc(p.label)+'"></td>'+
+      '<td class="mu"><input class="num" data-pp="'+i+'" inputmode="decimal" value="'+esc(p.pct)+'"></td>'+
+      '<td class="cost"><input class="num" data-pf="'+i+'" inputmode="decimal" value="'+esc(p.fixed)+'"></td>'+
+      '<td class="del"><button class="del-x" data-pd="'+i+'" title="Delete">✕</button></td>';
+    tb.appendChild(tr);});}
+$("#payBody").addEventListener("input",e=>{const d=e.target.dataset;
+  if(d.pl!=null){master.payments[+d.pl].label=e.target.value;save();}
+  else if(d.pp!=null){master.payments[+d.pp].pct=num(e.target.value);save();}
+  else if(d.pf!=null){master.payments[+d.pf].fixed=num(e.target.value);save();}});
+$("#payBody").addEventListener("click",e=>{const d=e.target.dataset;if(d.pd!=null){const p=master.payments[+d.pd];if(confirm('Delete "'+(p?p.label:"")+'"?')){master.payments.splice(+d.pd,1);save();renderPayments();toast("Deleted");}}});
+$("#addPay").addEventListener("click",()=>{master.payments.push({label:"New method",pct:0,fixed:0});save();renderPayments();});
+
+/* ---- init ---- */
+function applyMaster(b){if(b&&Array.isArray(b.catalog)&&b.catalog.length)master.catalog=b.catalog;
+  if(b&&Array.isArray(b.materials))master.materials=b.materials;
+  if(b&&Array.isArray(b.payments)&&b.payments.length)master.payments=b.payments;
+  if(b&&b.settings&&typeof b.settings==="object")master.settings=Object.assign({},DEFAULTS,b.settings);S=master.settings;}
+
+const GRID_SVC=[{"n":"A2000 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A2000 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A300 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A300 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A3000 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":400.0},{"n":"A3000 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":475.0},{"n":"A400 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A400 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A4000 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":499.0},{"n":"A4000 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":575.0},{"n":"Complimentary On-site Consultation (1 hour)","g":"Door","c":"Storm Doors","u":"job","r":0},{"n":"Storm Door Delivery — Basic (front of home only)","g":"Door","c":"Storm Doors","u":"each","r":65.0},{"n":"Storm Door Delivery — Premium (inside home or garage)","g":"Door","c":"Storm Doors","u":"each","r":120.0},{"n":"Old Storm Door Disposal — Full removal from property","g":"Door","c":"Storm Doors","u":"each","r":120.0},{"n":"EMCO 100 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":325.0},{"n":"EMCO 100 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":375.0},{"n":"LuminAire Double Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":399.0},{"n":"LuminAire Double Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":399.0},{"n":"LuminAire Single Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":299.0},{"n":"LuminAire Single Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":299.0},{"n":"On-site Consultation — Professional door assessment (1 hour)","g":"Door","c":"Storm Doors","u":"job","r":120.0}];
+const GRID_MAT=[{"name":"PVC Door Stop Trim — 3/8 x 1-1/4 x 84\"","sku":"3/8 x 1-1/4 x 84 PVC Door Stop Trim","cat":"Trim","cost":8.86},{"name":"Flat Utility Trim Moulding — 5/16 x 5 7/8 x 96\"","sku":"5/16 x 5 7/8 x 96 Flat Utility Trim Moulding","cat":"Trim","cost":41.08},{"name":"Andersen A2000 32x80 White Universal Full View Retractable","sku":"A2000 32x80 WHT UNI (FVR)","cat":"Storm Doors","cost":598.0},{"name":"Andersen A2000 34x80 White Universal Full View Retractable","sku":"A2000 34x80 WHT UNI (FVR)","cat":"Storm Doors","cost":598.0},{"name":"Andersen A2000 36x80 White Universal Full View Retractable","sku":"A2000 36x80 WHT UNI (FVR)","cat":"Storm Doors","cost":598.0},{"name":"Andersen A300 32x80 White Universal 3/4 Light Panel","sku":"A300 32x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":429.0},{"name":"Andersen A300 34x80 White Universal 3/4 Light Panel","sku":"A300 34x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":429.0},{"name":"Andersen A300 36x80 White Universal 3/4 Light Panel","sku":"A300 36x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":429.0},{"name":"Andersen A3000 32x80 Black LH Full View Retractable","sku":"A3000 32x80 BLK LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 Black RH Full View Retractable","sku":"A3000 32x80 BLK RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 White LH Full View Interchangeable","sku":"A3000 32x80 WHT LH (FVI)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 White LH Full View Retractable","sku":"A3000 32x80 WHT LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 White RH Full View Interchangeable","sku":"A3000 32x80 WHT RH (FVI)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 White RH Full View Retractable","sku":"A3000 32x80 WHT RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 34x80 Black LH Full View Retractable","sku":"A3000 34x80 BLK LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 34x80 Black RH Full View Retractable","sku":"A3000 34x80 BLK RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 34x80 White LH Full View Retractable","sku":"A3000 34x80 WHT LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 Black LH Full View Retractable","sku":"A3000 36x80 BLK LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 Black RH Full View Retractable","sku":"A3000 36x80 BLK RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 White LH Full View Interchangeable","sku":"A3000 36x80 WHT LH (FVI)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 White LH Full View Retractable","sku":"A3000 36x80 WHT LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 White RH Full View Interchangeable","sku":"A3000 36x80 WHT RH (FVI)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 White RH Full View Retractable","sku":"A3000 36x80 WHT RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A400 32x80 White Universal 3/4 Light Retractable","sku":"A400 32x80 WHT UNI (3/4 LIGHT RETRACT)","cat":"Storm Doors","cost":549.0},{"name":"Andersen A400 34x80 White Universal 3/4 Light Retractable","sku":"A400 34x80 WHT UNI (3/4 LIGHT RETRACT)","cat":"Storm Doors","cost":549.0},{"name":"Andersen A400 36x80 White Universal 3/4 Light Retractable","sku":"A400 36x80 WHT UNI (3/4 LIGHT RETRACT)","cat":"Storm Doors","cost":549.0},{"name":"Andersen A4000 32x80 Black LH Full View Retractable","sku":"A4000 32x80 BLK LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 32x80 Black RH Full View Retractable","sku":"A4000 32x80 BLK RH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 32x80 White LH Full View Retractable","sku":"A4000 32x80 WHT LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 34x80 Black LH Full View Retractable","sku":"A4000 34x80 BLK LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 34x80 Black RH Full View Retractable","sku":"A4000 34x80 BLK RH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 34x80 White LH Full View Retractable","sku":"A4000 34x80 WHT LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 36x80 Black LH Full View Retractable","sku":"A4000 36x80 BLK LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 36x80 Black RH Full View Retractable","sku":"A4000 36x80 BLK RH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 36x80 White LH Full View Retractable","sku":"A4000 36x80 WHT LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"EMCO 100 32x80 White Universal 3/4 Light Panel","sku":"EMCO 32x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":349.0},{"name":"EMCO 100 34x80 White Universal 3/4 Light Panel","sku":"EMCO 34x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":349.0},{"name":"EMCO 100 36x80 White Universal 3/4 Light Panel","sku":"EMCO 36x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":349.0},{"name":"Hardware Kit — Modern Brushed Dark Nickel (A3000/A4000)","sku":"HWKIT A3000/4000 MDRN BDRK NIKL","cat":"Hardware","cost":149.0},{"name":"Hardware Kit — Modern Black (A3000/A4000)","sku":"HWKIT A3000/4000 MDRN BLK","cat":"Hardware","cost":149.0},{"name":"Hardware Kit — Modern Venetian Bronze (A3000/A4000)","sku":"HWKIT A3000/4000 MDRN VEN BRNZ","cat":"Hardware","cost":149.0},{"name":"Hardware Kit — Traditional Nickel (A3000/A4000)","sku":"HWKIT A3000/4000 TDNL NIKL","cat":"Hardware","cost":129.0},{"name":"Hardware Kit — Traditional Oil Rubbed Bronze (A3000/A4000)","sku":"HWKIT A3000/4000 TDNL OR BRNZ","cat":"Hardware","cost":129.0},{"name":"Interior Door Slab — 32x80 Solid Core","sku":"INT SLAB 32x80 SOLID CORE","cat":"Interior","cost":0},{"name":"LuminAire Single Retractable Screen 32-36\"W x 78\"H Black","sku":"LUMNA SGL DR 32-36Wx78H BLK SCRN","cat":"Storm Doors","cost":0},{"name":"LuminAire Single Retractable Screen 32-36\"W x 78\"H White","sku":"LUMNA SGL DR 32-36Wx78H WHT SCRN","cat":"Storm Doors","cost":450.0},{"name":"LuminAire Single Retractable Screen 32-36\"W x 80\"H Black","sku":"LUMNA SGL DR 32-36Wx80H BLK SCRN","cat":"Storm Doors","cost":429.0},{"name":"LuminAire Single Retractable Screen 32-36\"W x 80\"H White","sku":"LUMNA SGL DR 32-36Wx80H WHT SCRN","cat":"Storm Doors","cost":398.0}];
+function seedGrid(){
+  if(num(S.gridSeed)>=1)return;
+  var have={};master.catalog.forEach(function(x){have[x.n]=1;});
+  GRID_SVC.forEach(function(s){if(!have[s.n])master.catalog.push({n:s.n,g:s.g,c:s.c,u:s.u,r:s.r});});
+  var hm={};master.materials.forEach(function(m){hm[m.name]=1;});
+  GRID_MAT.forEach(function(m){if(!hm[m.name])master.materials.push({id:'mat_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),name:m.name,sup:'Home Depot',sku:m.sku||'',cat:m.cat||'',cost:m.cost||0,mu:0,link:'',status:'approved'});});
+  S.gridSeed=1;save();
+}
+(async function init(){
+  setSync("save");
+  const server=await Api.load();
+  if(server&&Array.isArray(server.catalog)){syncMode="server";applyMaster(server);
+    if(!server.catalog.length){master.catalog=BUILTIN.map(x=>Object.assign({},x));master.settings=Object.assign({},DEFAULTS);S=master.settings;save();}}
+  else{syncMode="local";const raw=await Cache.get("master:scribe");if(raw){try{applyMaster(JSON.parse(raw));}catch(e){}}}
+  seedGrid();setSync("ok");
+  renderServices();renderMaterials();renderRates();renderPayments();
+})();
+</script>
+<script>
+(function(){var b=document.getElementById('tnavBtn'),m=document.getElementById('tnavMenu');if(!b||!m)return;
+function c(){m.classList.remove('open');b.setAttribute('aria-expanded','false');}
+b.addEventListener('click',function(e){e.stopPropagation();var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});
+document.addEventListener('click',function(e){if(!m.contains(e.target)&&!b.contains(e.target))c();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')c();});})();
+</script>
+<script>
+/* consistent role-gate: hide admin-only menu items for employees */
+fetch('/api/me',{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(d){
+  var admin=(d&&(d.role==='admin'||d.role==='super'));
+  if(!admin){Array.prototype.forEach.call(document.querySelectorAll('[data-role-min="admin"]'),function(e){e.style.display='none';});}
+}).catch(function(){});
+</script>
+<script>
+fetch('/api/me',{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(d){
+  if(!(d&&(d.role==='admin'||d.role==='super'))){document.body.innerHTML='<div style="max-width:560px;margin:80px auto;padding:24px;font-family:Inter,system-ui,sans-serif;text-align:center;color:#1c2024"><h2 style="font-family:Fraunces,Georgia,serif">Admins only</h2><p>This page is for admins and the owner.</p><p><a href="/index.html" style="color:#b5853a;font-weight:700">Back to The Hinge</a></p></div>';}
+}).catch(function(){});
+</script>
+</body>
+</html>

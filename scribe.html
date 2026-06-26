@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#15181c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Hinge">
+<script>try{var t=localStorage.getItem('hinge-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<title>Estimate — TheDoorPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b1f24; --ink-2:#20262c; --surface:#15181c; --card:#20262c;
+    --brass:#b5893f; --brass-dk:#e6c47e; --brass-lt:#e6c47e; --brass-hi:#e6c47e;
+    --green:#43b888; --red:#e06a5b; --muted:#969ca5; --line:rgba(255,255,255,.08); --text:#e8e2d5; --parchment:#ece4d4;
+    --radius:12px; --pad:16px;
+    --mono:ui-monospace,"SF Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:radial-gradient(1100px 560px at 50% -14%,#20262d 0%,rgba(32,38,45,0) 60%),var(--surface);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.4}
+  body{padding-bottom:150px}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input,select{font-family:inherit;font-size:16px;color:var(--text)}
+  input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  header{background:var(--ink);color:#fff;padding:16px var(--pad) 14px;position:sticky;top:0;z-index:30}
+  .brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .wordmark{font-weight:800;letter-spacing:-.01em;font-size:20px;display:flex;align-items:baseline;gap:9px}
+  .wordmark .scribe{color:var(--brass-lt)} .wordmark .by{font-size:11px;font-weight:600;color:#9AA1A8}
+  .hd-right{display:flex;align-items:center;gap:14px}
+  .sync{display:flex;align-items:center;gap:6px;font-size:11px;color:#9AA1A8}
+  .dot{width:9px;height:9px;border-radius:50%;background:#6B7280}
+  .dot.ok{background:#3FB984}.dot.save{background:var(--brass-lt)}.dot.off{background:#6B7280}
+  .toData{color:#cfd3d7;font-size:12px;font-weight:700;border:1px solid #3a4148;padding:7px 11px;border-radius:8px;text-decoration:none}
+
+  .meta{background:var(--ink-2);padding:12px var(--pad) 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .meta .full{grid-column:1/-1}
+  .meta label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9AA1A8;margin-bottom:4px}
+  .meta input{width:100%;background:#11161a;border:1px solid #3a4148;color:#fff;padding:9px 10px;border-radius:8px}
+  .meta input::placeholder{color:#69717a}
+  .doctype{display:flex;gap:10px;align-items:center}
+  .seg{display:inline-flex;background:#11161a;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;flex:0 0 auto}
+  .seg button{padding:8px 16px;font-size:12px;font-weight:600;color:var(--muted);background:transparent;border-radius:8px;letter-spacing:.02em;transition:.18s}
+  .seg button.on{background:linear-gradient(180deg,var(--brass-hi),var(--brass));color:#15110a;font-weight:700}
+  .doctype input{flex:1}
+  .paysel{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px 12px;background:#11161a;color:var(--text);font-weight:600}
+  .payhint{font-size:12.5px;color:var(--muted);margin-top:9px;line-height:1.45}
+  .payhint b{color:var(--green)}
+
+  main{padding:var(--pad);max-width:600px;margin:0 auto}
+  section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
+  .sec-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;cursor:pointer;user-select:none}
+  .sec-head h2{margin:0;font-size:13px;letter-spacing:.04em}
+  .sec-head .right{display:flex;align-items:center;gap:10px}
+  .sec-head .tot{font-weight:700;font-size:14px}
+  .chev{color:var(--muted);transition:transform .2s}
+  .collapsed .chev{transform:rotate(-90deg)}
+  .sec-body{padding:0 15px 14px}
+  .collapsed .sec-body{display:none}
+  .marker{width:8px;height:8px;border-radius:2px;background:var(--brass);display:inline-block;margin-right:9px;vertical-align:middle}
+
+  .line{padding:11px 0;border-top:1px solid var(--line)}
+  .line:first-child{border-top:none}
+  .line .top{display:flex;justify-content:space-between;gap:10px}
+  .line .nm{font-size:14px;font-weight:600}
+  .line .un{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+  .line .lt{font-weight:700;align-self:center;white-space:nowrap}
+  .ctrls{display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap}
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .stepper button{width:34px;height:34px;font-size:18px;color:var(--text);background:#262d35}
+  .stepper button:active{background:var(--brass-lt)}
+  .stepper input{width:46px;text-align:center;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line);height:34px;background:#11161a;color:var(--text)}
+  .mini{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:0 8px;height:34px}
+  .mini input{width:54px;border:none;text-align:right;height:32px;background:transparent;color:var(--text)}
+  .mini.mu input{width:40px}
+  .taxchip{height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--muted);background:#262d35;letter-spacing:.04em}
+  .taxchip.on{background:var(--brass);color:#1c1206;border-color:var(--brass)}
+  .taxchip:not(.on){border-style:dashed}
+  .rm{margin-left:auto;color:var(--red);font-size:12px;font-weight:600;padding:7px 4px}
+  .lnk{height:34px;padding:0 10px;border-radius:8px;border:1px solid var(--brass);color:var(--brass-dk);font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px;text-decoration:none}
+  .savecat{height:34px;padding:0 10px;border-radius:8px;border:1px solid var(--line);color:var(--text);font-size:12px;font-weight:600;background:#262d35}
+
+  .add{flex:1;margin-top:12px;background:var(--ink);color:#fff;font-weight:700;font-size:14px;padding:13px;border-radius:10px;letter-spacing:.02em}
+  .add:active{background:var(--ink-2)}
+  .add.alt{background:#262d35;color:var(--text);border:1px solid var(--line)}
+  .addrow{display:flex;gap:9px}
+  .empty{color:var(--muted);font-size:13px;padding:14px 0;text-align:center}
+  .flag{background:rgba(224,106,91,.12);border:1px solid rgba(224,106,91,.4);color:#e89a90;font-size:12.5px;font-weight:600;padding:9px 11px;border-radius:8px;margin-top:10px;display:none}
+  .flag.on{display:block}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+  .fld label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+  .fld input{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#11161a;color:var(--text)}
+  .fld input.num{text-align:right}
+  .subhd{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-dk);font-weight:700;margin:14px 0 8px}
+  .subhd:first-child{margin-top:4px}
+  .taxtoggle{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px;color:var(--muted)}
+
+  .matrow{border-top:1px solid var(--line);padding:11px 0}
+  .matrow:first-child{border-top:none}
+  .matrow .top{display:flex;justify-content:space-between;gap:8px}
+  .matrow .nm2{font-weight:600;font-size:14px}
+  .matrow .mt{font-weight:700}
+  .matrow .det{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .matrow .det input{width:100%;border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-size:13px;background:#11161a;color:var(--text)}
+  .matrow .det .full{grid-column:1/-1}
+  .matrow .det input.num{text-align:right}
+
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--ink);color:#fff;border-top:3px solid var(--brass)}
+  .bar-main{display:flex;align-items:center;justify-content:space-between;padding:12px var(--pad);cursor:pointer;max-width:600px;margin:0 auto}
+  .bar .lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9AA1A8}
+  .bar .big{font-size:26px;font-weight:800;letter-spacing:-.01em}
+  .bar .profit{text-align:right}
+  .bar .profit .p{font-weight:700;font-size:15px;color:var(--brass-lt)}
+  .bar .profit .m{font-size:11px;color:#9AA1A8}
+  .drawer{max-width:600px;margin:0 auto;display:none;border-top:1px solid #3a4148;padding:6px var(--pad) 14px}
+  .dgrp{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--brass);font-weight:800;margin:10px 0 3px}
+  .bar.open .drawer{display:block}
+  .drow{display:flex;justify-content:space-between;padding:6px 0;font-size:13.5px;border-top:1px solid #2a3036}
+  .drow:first-child{border-top:none}
+  .drow.tot{font-weight:800;font-size:16px;border-top:1px solid var(--brass);margin-top:4px;padding-top:9px}
+  .drow .neg{color:#d98a82}.drow .pos{color:var(--brass-lt)}
+  .barbtns{display:flex;gap:9px;margin-top:12px}
+  .barbtns button{flex:1;padding:11px;border-radius:9px;font-weight:700;font-size:13px}
+  .b-copy{background:#2a3036;color:#cfd3d7;border:1px solid #3a4148}.b-new{background:#2a3036;color:#cfd3d7;border:1px solid #3a4148}.b-pdf{background:var(--brass);color:#1c1206}
+
+  .scrim{position:fixed;inset:0;background:rgba(20,24,28,.55);z-index:50;display:none;align-items:flex-end}
+  .scrim.on{display:flex}
+  .sheet{background:var(--surface);width:100%;max-width:600px;margin:0 auto;border-radius:16px 16px 0 0;max-height:88vh;display:flex;flex-direction:column;animation:up .22s ease}
+  @keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  @media (prefers-reduced-motion:reduce){.sheet{animation:none}}
+  .sheet-hd{padding:14px var(--pad) 10px;border-bottom:1px solid var(--line)}
+  .sheet-hd .row{display:flex;justify-content:space-between;align-items:center}
+  .sheet-hd h3{margin:0;font-size:16px}
+  .sheet-hd .x{font-size:22px;color:var(--muted);padding:4px 8px}
+  .search{width:100%;margin-top:10px;border:1px solid var(--line);border-radius:9px;padding:11px 12px;background:#11161a;color:var(--text)}
+  .sheet-body{overflow-y:auto;padding:6px var(--pad) 18px}
+  .catlbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-dk);font-weight:700;margin:16px 0 6px}
+  .pick{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:9px;margin-bottom:7px}
+  .pick:active{border-color:var(--brass);background:rgba(230,196,126,.08)}
+  .pick .pn{font-size:14px;font-weight:600}
+  .pick .pu{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+  .pick .pr{font-weight:700;font-family:var(--mono)}
+  .pill{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.08em;padding:2px 6px;border-radius:4px;margin-left:7px;vertical-align:middle}
+  .pill.door{background:#dfe7f2;color:#264a7a}.pill.hand{background:#f3e6cf;color:#8a5a00}.pill.cust{background:#e3e8e5;color:#3a5a48}
+  .si-add{font-size:12px;font-weight:700;color:var(--brass-dk);border:1px solid var(--brass);border-radius:7px;padding:8px 11px;margin-left:auto}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:170px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:600;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.on{opacity:1}
+  .note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+  .copybox{width:100%;height:200px;border:1px solid var(--line);border-radius:9px;padding:10px;font-family:var(--mono);font-size:12px;background:#11161a;color:var(--text)}
+  #printDoc{display:none}
+  @media print{
+    @page{margin:14mm}
+    html,body{padding:0!important;margin:0!important;background:#fff!important}
+    body>*{display:none!important}
+    #printDoc{display:block!important;position:static!important;visibility:visible!important;color:#000;background:#fff!important;font-family:var(--sans)}
+    #printDoc *{visibility:visible!important}
+  }
+  #printDoc .pd-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1C2024;padding-bottom:12px;margin-bottom:18px}
+  #printDoc .pd-brand{font-size:26px;font-weight:800;color:#1C2024}
+  #printDoc .pd-brand span{color:#8E6628}
+  #printDoc .pd-tag{font-size:11px;color:#555;margin-top:2px}
+  #printDoc .pd-doc{text-align:right;font-size:12px;color:#333}
+  #printDoc .pd-doc .big{font-size:20px;font-weight:800;color:#8E6628}
+  #printDoc .pd-party{display:flex;justify-content:space-between;margin-bottom:16px;font-size:12.5px}
+  #printDoc .pd-party h4{margin:0 0 4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8E6628}
+  #printDoc table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:14px}
+  #printDoc th{text-align:left;border-bottom:2px solid #1C2024;padding:7px 6px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#444}
+  #printDoc th.r,#printDoc td.r{text-align:right;font-variant-numeric:tabular-nums}
+  #printDoc td{padding:7px 6px;border-bottom:1px solid #e2e0db}
+  #printDoc .pd-tot{width:46%;margin-left:auto;font-size:13px}
+  #printDoc .pd-tot .row{display:flex;justify-content:space-between;padding:5px 0}
+  #printDoc .pd-tot .row.grand{font-weight:800;font-size:16px;border-top:2px solid #1C2024;margin-top:4px;padding-top:8px}
+  #printDoc .pd-notes{margin-top:16px;font-size:12px;color:#333;white-space:pre-wrap;border-left:3px solid #E8D5B0;padding:4px 0 4px 12px}
+  #printDoc .pd-foot{margin-top:26px;border-top:1px solid #ccc;padding-top:10px;font-size:10.5px;color:#777;text-align:center}
+  #printDoc thead{display:table-header-group}
+  #printDoc tr,#printDoc .pd-tot,#printDoc .pd-party,#printDoc .pd-notes,#printDoc .pd-foot{break-inside:avoid;page-break-inside:avoid}
+
+.tnav-so{color:#969ca5;text-decoration:none;font-size:12.5px;border:1px solid rgba(255,255,255,.08);padding:7px 12px;border-radius:9px}
+.tnav-so:hover{color:#ece4d4;border-color:rgba(230,196,126,.30)}
+.tnav-burger{width:42px;height:38px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:rgba(255,255,255,.02);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer}
+.tnav-burger span{display:block;width:18px;height:2px;border-radius:2px;background:#e6c47e;transition:.22s}
+.tnav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.tnav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.tnav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.tnav-menu{position:fixed;top:60px;right:16px;width:240px;z-index:300;background:linear-gradient(180deg,#262d35,#20262c);border:1px solid rgba(230,196,126,.18);border-radius:14px;box-shadow:0 18px 40px -22px rgba(0,0,0,.8);padding:8px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.2s;font-family:"Inter",system-ui,sans-serif}
+.tnav-menu.open{opacity:1;visibility:visible;transform:translateY(0)}
+.tnav-menu a,.tnav-menu .tnav-dis{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:9px;text-decoration:none;color:#ece4d4;font-size:14px;font-weight:500}
+.tnav-menu a:hover{background:rgba(230,196,126,.08)}
+.tnav-menu .tnav-dis{color:#969ca5}
+.tnav-tag{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:3px 8px;border-radius:14px}
+.tnav-tag.admin{color:#11141a;background:linear-gradient(180deg,#e6c47e,#b5893f)}
+.tnav-tag.soon{color:#969ca5;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.tnav-div{height:1px;background:rgba(255,255,255,.07);margin:6px 8px}
+html[data-theme="light"]{--bg:#f4f1e9;--panel:#ffffff;--panel-2:#faf8f2;--line:#d9d2c2;--line-soft:#e6e0d2;--text:#1c2024;--parchment:#1c2024;--muted:#6b7178;--shadow:0 8px 24px rgba(0,0,0,.12)}
+</style>
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<header>
+  <div class="brand" style="cursor:pointer" onclick="location.href='/index.html'">
+    <div class="wordmark"><span class="scribe">Estimate</span><span class="by">by TheDoorPro</span></div>
+    <div class="hd-right">
+      <div class="sync"><span class="dot" id="syncDot"></span><span id="syncTxt">…</span></div>
+      <a class="hback" href="/index.html" title="Back" onclick="if(history.length>1){history.back();return false}">&#8592;</a>
+      <button class="tnav-burger" id="tnavBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="tnav-menu" id="tnavMenu" aria-label="Go to">
+    <a href="/profile.html">My Profile</a>
+    <a href="/customers.html?new=1">Add New Customer</a>
+    <a href="/customers.html">View all customers</a>
+    <a href="/scribe.html?quick=1">Quick Estimate</a>
+    <a href="/settings.html">Settings</a>
+    <div class="tnav-div" role="separator"></div>
+    <a href="/cdn-cgi/access/logout" class="tnav-signout">Sign out</a>
+  </nav>
+
+<div class="meta">
+  <div class="full" id="custSummary" style="display:none"><label>Customer · from file</label><div id="custSumTxt" style="padding:9px 0;color:var(--brass);font-weight:700">—</div></div>
+  <div id="custBlock" style="display:contents">
+  <div class="full"><label>Customer</label><input id="mCust" placeholder="Name"></div>
+  <div class="full"><label>Address</label><input id="mAddr" placeholder="Street address"></div>
+  <div><label>City</label><input id="mCity" placeholder="Calgary"></div>
+  <div><label>Province</label>
+    <select id="mProv" style="width:100%;background:#11161a;border:1px solid #3a4148;color:#fff;padding:9px 10px;border-radius:8px">
+      <option value="">—</option><option>AB</option><option>BC</option><option>SK</option><option>MB</option><option>ON</option><option>QC</option><option>NB</option><option>NS</option><option>PE</option><option>NL</option><option>YT</option><option>NT</option><option>NU</option>
+    </select></div>
+  <div><label>Postal code</label><input id="mPostal" placeholder="T2X 0X0"></div>
+  <div><label>Phone</label><input id="mPhone" placeholder="Phone"></div>
+  <div class="full"><label>Email</label><input id="mEmail" type="email" placeholder="Email"></div>
+  </div>
+  <div><label>Date</label><input id="mDate" type="date"></div>
+  <div class="full"><label>Estimate # (auto-assigned)</label><input id="mEstNum" placeholder="Assigned when you save / make PDF" readonly style="opacity:.85;font-weight:700;color:var(--brass)"></div>
+  <div class="full"><label>Joist reference # (optional)</label><input id="mNum" placeholder="Only if you also made it in Joist"></div>
+  <div class="full doctype">
+    <div class="seg"><button id="segReg" class="on">Regular</button><button id="segCon">Contractor</button></div>
+    <span id="modeHint" style="color:var(--brass);font-size:12px;font-weight:700;align-self:center"></span>
+  </div>
+</div>
+<main>
+  <section id="secServices">
+    <div class="sec-head" data-toggle><h2><span class="marker"></span>Labour &amp; Services</h2>
+      <div class="right"><span class="tot num" id="totLabour">$0.00</span><span class="chev">▾</span></div></div>
+    <div class="sec-body">
+      <div id="lineList"><div class="empty">No services yet — add your first one.</div></div>
+      <div class="flag" id="minFlag">⚠ Below handyman minimum — apply the First Hour fee.</div>
+      <button class="add" id="addSvc">+ Add service</button>
+    </div>
+  </section>
+  <section id="secMat" class="collapsed">
+    <div class="sec-head" data-toggle><h2><span class="marker"></span>Materials</h2>
+      <div class="right"><span class="tot num" id="totMat">$0.00</span><span class="chev">▾</span></div></div>
+    <div class="sec-body">
+      <div id="matList"><div class="empty">No materials logged.</div></div>
+      <div class="addrow"><button class="add alt" id="addMatCat">+ From catalog</button><button class="add" id="addMat">+ New material</button></div>
+      <div class="note">Each line has its own markup and GST toggle. Found a new part at a supplier? Fill it in and tap <b>Submit</b> — it goes to the admin team for review, and once approved it appears in the catalog for everyone.</div>
+    </div>
+  </section>
+  <section id="secTravel" class="collapsed">
+    <div class="sec-head" data-toggle><h2><span class="marker"></span>Travel &amp; Truck</h2>
+      <div class="right"><span class="tot num" id="totTravel">$0.00</span><span class="chev">▾</span></div></div>
+    <div class="sec-body">
+      <div class="subhd">Personal vehicle</div>
+      <div class="grid2"><div class="fld"><label>Round-trip km</label><input class="num" id="tVehKm" type="number" inputmode="decimal" value="0"></div></div>
+      <div class="subhd">Truck / Van</div>
+      <div class="grid2"><div class="fld"><label>Days</label><input class="num" id="tVanD" type="number" inputmode="decimal" value="0"></div>
+        <div class="fld"><label>Km</label><input class="num" id="tVanK" type="number" inputmode="decimal" value="0"></div></div>
+      <div class="subhd">Small cube</div>
+      <div class="grid2"><div class="fld"><label>Days</label><input class="num" id="tCubeD" type="number" inputmode="decimal" value="0"></div>
+        <div class="fld"><label>Km</label><input class="num" id="tCubeK" type="number" inputmode="decimal" value="0"></div></div>
+      <label class="taxtoggle"><input type="checkbox" id="travelTax" checked> Charge GST on travel</label>
+    </div>
+  </section>
+  <section id="secNotes" class="collapsed">
+    <div class="sec-head" data-toggle><h2><span class="marker"></span>Scope &amp; notes</h2><div class="right"><span class="chev">▾</span></div></div>
+    <div class="sec-body">
+      <textarea id="mNotes" placeholder="Describe the work / scope of the job. This prints on the customer's PDF." style="width:100%;min-height:90px;border:1px solid var(--line);border-radius:9px;padding:10px;font-family:inherit;font-size:14px;resize:vertical"></textarea>
+    </div>
+  </section>
+  <section id="secPay">
+    <div class="sec-head" data-toggle><h2><span class="marker"></span>Payment method</h2>
+      <div class="right"><span class="tot" id="payTot" style="font-size:13px">Cash</span><span class="chev">▾</span></div></div>
+    <div class="sec-body">
+      <label style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-dk);font-weight:700;display:block;margin:4px 0 8px">How is the customer paying?</label>
+      <select class="paysel" id="paySel"></select>
+      <div class="payhint" id="payHint"></div>
+      <div class="grid2" style="margin-top:14px"><div class="fld"><label>Deposit / amount already paid</label><input class="num" id="mDeposit" type="number" inputmode="decimal" value="0"></div></div>
+    </div>
+  </section>
+</main>
+
+<div class="bar" id="bar">
+  <div class="bar-main" id="barMain">
+    <div><div class="lbl">Total due · incl. GST</div><div class="big num" id="barTotal">$0.00</div></div>
+    <div class="profit"><div class="lbl">GST included</div><div class="p num" id="barGst">$0.00</div></div>
+  </div>
+  <div class="drawer" id="drawer">
+    <div class="dgrp">Materials, delivery &amp; travel</div>
+    <div class="drow"><span>Materials</span><span class="num" id="dMat">$0.00</span></div>
+    <div class="drow" id="rowDeliv"><span>Delivery &amp; handling</span><span class="num" id="dDeliv">$0.00</span></div>
+    <div class="drow"><span>Travel &amp; truck</span><span class="num" id="dTravel2">$0.00</span></div>
+    <div class="drow tot"><span>Subtotal</span><span class="num" id="dGroup1">$0.00</span></div>
+    <div class="dgrp">Labour</div>
+    <div class="drow"><span>Labour</span><span class="num" id="dLabour">$0.00</span></div>
+    <div class="drow" id="rowCon" style="display:none"><span id="conLbl">Contractor rate</span><span class="num neg" id="dCon">$0.00</span></div>
+    <div class="drow tot"><span>Subtotal</span><span class="num" id="dGroup2">$0.00</span></div>
+    <div class="drow tot" style="border-top:1px solid var(--brass);margin-top:4px"><span>Subtotal · pre-GST</span><span class="num" id="dSub">$0.00</span></div>
+    <div class="drow"><span id="dGstLbl">GST</span><span class="num" id="dGst">$0.00</span></div>
+    <div class="drow tot"><span>TOTAL</span><span class="num" id="dTot">$0.00</span></div>
+    <div class="drow" id="rowSur"><span id="dPayName">Card surcharge</span><span class="num neg" id="dSur">+$0.00</span></div>
+    <div class="drow tot" id="rowCust"><span>Customer pays</span><span class="num" id="dCustomer">$0.00</span></div>
+    <div class="drow" id="rowDep"><span>Less deposit paid</span><span class="num neg" id="dDep">–$0.00</span></div>
+    <div class="drow tot" id="rowBal"><span>Balance due</span><span class="num" id="dBal">$0.00</span></div>
+    <div class="barbtns"><button class="b-new" id="bOpen">Open</button><button class="b-new" id="bNew">New</button><button class="b-copy" id="bCopy">Copy</button><button class="b-copy" id="bSave">Save</button><button class="b-pdf" id="bPdf">Save PDF</button></div>
+  </div>
+</div>
+
+<div class="scrim" id="svcScrim"><div class="sheet">
+  <div class="sheet-hd"><div class="row"><h3>Add service</h3><button class="x" data-close>✕</button></div>
+    <input class="search" id="svcSearch" placeholder="Search services…"></div>
+  <div class="sheet-body" id="svcList"></div>
+</div></div>
+<div class="scrim" id="matCatScrim"><div class="sheet">
+  <div class="sheet-hd"><div class="row"><h3>Add from saved materials</h3><button class="x" data-close>✕</button></div>
+    <input class="search" id="matSearch" placeholder="Search materials…"></div>
+  <div class="sheet-body" id="matCatList"></div>
+</div></div>
+<div class="scrim" id="copyScrim"><div class="sheet">
+  <div class="sheet-hd"><div class="row"><h3>Copy for Joist</h3><button class="x" data-close>✕</button></div></div>
+  <div class="sheet-body"><textarea class="copybox" id="copyBox" readonly></textarea>
+    <button class="add" id="copyBtn" style="margin-top:10px">Copy to clipboard</button></div>
+</div></div>
+
+<div class="scrim" id="jobsScrim"><div class="sheet">
+  <div class="sheet-hd"><div class="row"><h3>Your saved estimates</h3><button class="x" data-close>✕</button></div></div>
+  <div class="sheet-body"><div id="jobsList"></div></div>
+</div></div>
+<div class="toast" id="toast"></div>
+<div id="printDoc"></div>
+<datalist id="matCats"></datalist>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+"use strict";
+const DEFAULTS={vehRate:0.73,vanDay:19.95,vanKm:0.99,cubeDay:29.95,cubeKm:0.99,markup:15,ins:2,wcb:2,stripe:2.9,stripeFixed:0.30,gst:5,hmin:135,contractor:15,ejsKey:"",ejsService:"",ejsTemplate:"",adminEmail:""};
+const PAYDEF=[{label:"Cash",pct:0,fixed:0},{label:"E-transfer",pct:0,fixed:0},{label:"Debit",pct:1.5,fixed:0},{label:"Credit card",pct:2.9,fixed:0.30}];
+const CATS=["Door Slabs & Units","Prehung Units","Hinges","Knobs & Levers","Deadbolts & Locks","Door Closers & Stops","Viewers & Cameras","Weatherstripping & Seals","Thresholds & Sills","Door Sweeps","Barn / Bypass / Pocket Hardware","Tracks & Rollers","Pet Doors","Glass & Inserts","Smart / Electronic Locks","Fasteners & Shims","Adhesives, Caulk & Sealants","Paint, Primer & Stain","Finishing Supplies","Trim & Moulding","Tools & Consumables","Other / Misc"];
+function tokMatch(text,q){text=(text||"").toLowerCase();return q.toLowerCase().split(/\s+/).filter(Boolean).every(w=>text.indexOf(w)>=0);}
+const BUILTIN=[
+ ["Site Consultation & Measure","Door","Interior","visit",95],["Hang Prehung Interior Door (Hollow-Core)","Door","Interior","door",120],
+ ["Hang Prehung Interior Door (Solid-Core)","Door","Interior","door",150],["Hang Prehung French / Double Door","Door","Interior","opening",250],
+ ["Hang Pre-Machined Slab in Existing Frame","Door","Interior","door",90],["Prep & Hang Interior Slab (full)","Door","Interior","door",185],
+ ["Mortise Hinges (up to 3)","Door","Interior","door",55],["Bore for Knob + Latch","Door","Interior","door",40],
+ ["Trim / Cut Down Slab to Size","Door","Interior","door",35],["Install Bifold Door","Door","Interior","opening",85],
+ ["Install Bypass / Closet Sliding Doors","Door","Interior","opening",110],["Install Barn Door (track + slab)","Door","Interior","opening",180],
+ ["Install Pocket Door (existing frame)","Door","Interior","opening",150],["Pet Door Cutout & Fit","Door","Interior","door",120],
+ ["Remove & Haul Old Interior Door","Door","Interior","door",35],["Interior Threshold / Transition Strip","Door","Interior","each",55],
+ ["Hang Prehung Exterior / Entry Door","Door","Exterior","door",250],["Install Exterior Slab (prep + hang)","Door","Exterior","door",325],
+ ["Install Patio / Exterior French Door","Door","Exterior","opening",375],["Storm Door Install","Door","Exterior","door",200],
+ ["Security / Steel Door Install","Door","Exterior","door",275],["Exterior Threshold / Sill Replacement","Door","Exterior","each",110],
+ ["Weatherstripping Replacement","Door","Exterior","door",45],["Door Sweep Replacement","Door","Exterior","each",35],
+ ["Astragal / Double-Door Seal Install","Door","Exterior","each",55],["Caulk & Seal Exterior Door","Door","Exterior","door",45],
+ ["Doorknob / Lever Replacement","Door","Hardware","each",55],["Deadbolt Install (new bore)","Door","Hardware","each",65],
+ ["Smart Lock Install","Door","Hardware","each",90],["Door Closer Install","Door","Hardware","each",75],
+ ["Hinge Replacement","Door","Hardware","hinge",25],["Mortise + Install Single Hinge","Door","Hardware","hinge",30],
+ ["Latch / Strike Plate Adjustment","Door","Hardware","door",45],["Install Door Viewer / Peephole","Door","Hardware","each",35],
+ ["Doorbell Camera Install","Door","Hardware","each",120],["Diagnostic / Repair Assessment","Door","Repairs","hour",85],
+ ["Adjust / Realign Sticking Door","Door","Repairs","door",75],["Plane / Trim Binding Door","Door","Repairs","door",65],
+ ["Re-Mortise / Fix Botched Hinge","Door","Repairs","hour",85],["Wood Fill / Patch Damaged Door","Door","Repairs","hour",85],
+ ["Re-Hang Fallen / Loose Door","Door","Repairs","door",90],["Frame / Jamb Repair","Door","Repairs","hour",85],
+ ["Sand & Prep Slab (shop)","Door","Shop Finishing","door",40],["Paint Door — 2 coats, both sides","Door","Shop Finishing","door",65],
+ ["Primer Coat","Door","Shop Finishing","door",30],["Stain & Finish","Door","Shop Finishing","door",95],
+ ["First Hour / Minimum Visit","Handyman","Rates","job",135],["Each Additional Hour","Handyman","Rates","hour",85],
+ ["Half-Day (up to 4 hrs)","Handyman","Rates","block",375],["Full-Day (up to 8 hrs)","Handyman","Rates","block",690],
+ ["Mount TV (existing wall)","Handyman","Flat-Rate Tasks","each",120],["Furniture Assembly","Handyman","Flat-Rate Tasks","item",60],
+ ["Install Floating Shelf","Handyman","Flat-Rate Tasks","each",45],["Install Shelving / Closet Organizer","Handyman","Flat-Rate Tasks","unit",90],
+ ["Install Curtain Rods / Blinds","Handyman","Flat-Rate Tasks","window",45],["Install Bathroom Hardware (towel bar, etc.)","Handyman","Flat-Rate Tasks","each",35],
+ ["Window Screen Repair / Rescreen","Handyman","Flat-Rate Tasks","screen",60],["Window Screen Frame Rebuild","Handyman","Flat-Rate Tasks","screen",85],
+ ["Cabinet Door / Drawer Repair","Handyman","Flat-Rate Tasks","each",55],["Gate Adjustment / Repair","Handyman","Flat-Rate Tasks","gate",85],
+ ["Re-Caulking (tub / window / trim)","Handyman","Flat-Rate Tasks","area",65],["Drywall Patch (small)","Handyman","Flat-Rate Tasks","patch",75],
+ ["Drywall Patch (large / sheet)","Handyman","Flat-Rate Tasks","patch",150],["Interior Painting (per room)","Handyman","Flat-Rate Tasks","room",250],
+ ["Baseboard Install","Handyman","Per-Unit / Bulk","lin ft",4],["Crown Moulding Install","Handyman","Per-Unit / Bulk","lin ft",7],
+ ["Quarter Round / Shoe Moulding","Handyman","Per-Unit / Bulk","lin ft",3],["Window / Door Casing & Trim","Handyman","Per-Unit / Bulk","opening",65],
+ ["Install Cabinet Hardware","Handyman","Per-Unit / Bulk","piece",12],["Hang Pictures / Mirrors / Art","Handyman","Per-Unit / Bulk","item",25],
+ ["Install Door Stop / Bumpers","Handyman","Per-Unit / Bulk","each",20],["Wainscoting / Accent Wall","Handyman","Hourly Tasks","hour",85],
+ ["Weatherproofing / Draft Sealing","Handyman","Hourly Tasks","hour",85],["Minor Flooring Repair","Handyman","Hourly Tasks","hour",85],
+ ["Fence Board / Picket Repair","Handyman","Hourly Tasks","hour",85],["Deck Board Replacement","Handyman","Hourly Tasks","hour",85],
+ ["Paint Touch-Up","Handyman","Hourly Tasks","hour",85],
+].map(a=>({n:a[0],g:a[1],c:a[2],u:a[3],r:a[4]}));
+
+let master={catalog:BUILTIN.map(x=>Object.assign({},x)),materials:[],settings:Object.assign({},DEFAULTS),payments:PAYDEF.map(x=>Object.assign({},x))};
+let S=master.settings;
+function catalog(){return master.catalog;}
+function newEstimate(){return{cust:"",addr:"",city:"",prov:"",postal:"",phone:"",email:"",date:todayISO(),docType:"Estimate",docNum:"",estNumber:"",profileId:"",profileNumber:"",mode:"regular",notes:"",payIdx:0,deposit:0,lines:[],mats:[],tr:{vehKm:0,vanD:0,vanK:0,cubeD:0,cubeK:0},travelTax:true};}
+function addrLine(joiner){const cityProv=[est.city,est.prov].filter(Boolean).join(", ");const l2=[cityProv,est.postal].filter(Boolean).join(" ");return [est.addr,l2].filter(Boolean).join(joiner||", ");}
+let est=newEstimate();
+let currentJobId=null;
+
+const Cache=(function(){const cloud=(typeof window!=="undefined"&&window.storage&&typeof window.storage.get==="function");
+  return{async get(k){if(cloud){try{const r=await window.storage.get(k);return r?r.value:null;}catch(e){return null;}}try{return localStorage.getItem(k);}catch(e){return null;}},
+    async set(k,v){if(cloud){try{await window.storage.set(k,v);}catch(e){}return;}try{localStorage.setItem(k,v);}catch(e){}}};})();
+let syncMode="local";
+const Api={async load(){try{const r=await fetch("/api/data",{cache:"no-store"});if(r.ok)return await r.json();}catch(e){}return null;},
+  async save(b){try{const r=await fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});return r.ok;}catch(e){return false;}}};
+function setSync(s){const d=$("#syncDot"),t=$("#syncTxt");
+  if(s==="ok"){d.className="dot ok";t.textContent=syncMode==="server"?"Synced":"Saved locally";}
+  else if(s==="save"){d.className="dot save";t.textContent="Saving…";}else{d.className="dot off";t.textContent="Offline";}}
+let saveT;
+function saveMaster(){const blob={catalog:master.catalog,materials:master.materials,settings:master.settings,payments:master.payments};
+  Cache.set("master:scribe",JSON.stringify(blob));
+  if(syncMode==="server"){setSync("save");clearTimeout(saveT);saveT=setTimeout(async()=>{const ok=await Api.save(blob);setSync(ok?"ok":"off");},600);}else setSync("ok");}
+
+function todayISO(){return new Date().toISOString().slice(0,10);}
+function money(n){if(!isFinite(n))n=0;return"$"+n.toLocaleString("en-CA",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function pct(n){return(n*100).toFixed(1)+"%";}
+function num(v){const x=parseFloat(v);return isFinite(x)?x:0;}
+function esc(s){return(s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function $(s){return document.querySelector(s);}
+function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+function debounce(fn,ms){let t;return function(){clearTimeout(t);t=setTimeout(fn,ms);};}
+
+function compute(){
+  let svcBase=0,svcCharged=0,taxBase=0;
+  const lf=(est.mode==="contractor")?(1-num(S.contractor)/100):1;
+  let delivery=0;const isDeliv=n=>/deliver|disposal|handling|haul|trip charge/i.test(n||"");
+  est.lines.forEach(l=>{const base=num(l.qty)*num(l.rate);const ch=base*(1+num(l.mu)/100)*lf;svcBase+=base;svcCharged+=ch;if(isDeliv(l.name))delivery+=ch;if(l.tax!==false)taxBase+=ch;});
+  let matCost=0,matCharged=0;
+  est.mats.forEach(m=>{const cost=num(m.qty)*num(m.cost);const ch=cost*(1+num(m.mu)/100);matCost+=cost;matCharged+=ch;if(m.tax!==false)taxBase+=ch;});
+  const veh=num(est.tr.vehKm)*S.vehRate;
+  const truck=num(est.tr.vanD)*S.vanDay+num(est.tr.vanK)*S.vanKm+num(est.tr.cubeD)*S.cubeDay+num(est.tr.cubeK)*S.cubeKm;
+  const travel=veh+truck;if(est.travelTax!==false)taxBase+=travel;
+  const sub=svcCharged+matCharged+travel,gst=taxBase*(S.gst/100),total=sub+gst;
+  const pm=(master.payments&&master.payments[est.payIdx])||{label:"Cash",pct:0,fixed:0};
+  const surcharge=total>0?total*(num(pm.pct)/100)+num(pm.fixed):0;
+  const customer=total+surcharge;
+  const deposit=num(est.deposit);const balance=customer-deposit;
+  // surcharge is passed to the customer to cover the processor fee, so it nets out of profit
+  const costs=matCost+truck+veh+sub*(S.ins/100)+svcBase*(S.wcb/100);
+  return{labour:svcCharged,labourOnly:svcCharged-delivery,delivery,labourSaved:lf<1?(svcCharged/lf-svcCharged):0,mode:est.mode,matCost,matCharged,veh,truck,travel,sub,gst,total,pm:pm,surcharge,customer,deposit,balance,profit:sub-costs,margin:sub>0?(sub-costs)/sub:0};
+}
+
+function render(){
+  const list=$("#lineList");list.innerHTML="";
+  if(!est.lines.length)list.appendChild(el("div","empty","No services yet — add your first one."));
+  est.lines.forEach((l,i)=>{const base=num(l.qty)*num(l.rate),lt=base*(1+num(l.mu)/100);
+    const row=el("div","line");
+    row.innerHTML='<div class="top"><div><div class="nm">'+esc(l.name)+'</div><div class="un">'+esc(l.unit)+' · base '+money(base)+'</div></div>'+
+      '<div class="lt num">'+money(lt)+'</div></div>'+
+      '<div class="ctrls"><div class="stepper"><button data-dec="'+i+'">–</button><input class="num" data-qty="'+i+'" inputmode="decimal" value="'+esc(l.qty)+'"><button data-inc="'+i+'">+</button></div>'+
+      '<span class="mini">$<input class="num" data-rate="'+i+'" inputmode="decimal" value="'+esc(l.rate)+'"></span>'+
+      '<span class="mini mu">MU<input class="num" data-mu="'+i+'" inputmode="decimal" value="'+esc(l.mu||0)+'">%</span>'+
+      '<button class="taxchip'+(l.tax!==false?' on':'')+'" data-tax="'+i+'">'+(l.tax!==false?'\u2611 GST':'\u2610 GST')+'</button>'+
+      '<button class="rm" data-rm="'+i+'">Remove</button></div>';
+    list.appendChild(row);});
+  const ml=$("#matList");ml.innerHTML="";
+  if(!est.mats.length)ml.appendChild(el("div","empty","No materials logged."));
+  est.mats.forEach((m,i)=>{const cost=num(m.qty)*num(m.cost),ch=cost*(1+num(m.mu)/100);
+    const row=el("div","matrow");
+    row.innerHTML='<div class="top"><div class="nm2">'+(esc(m.name)||"Material")+'</div><div class="mt num">'+money(ch)+'</div></div>'+
+      '<div class="det"><input class="full" data-mname="'+i+'" placeholder="Material" value="'+esc(m.name)+'">'+
+      '<input data-msup="'+i+'" placeholder="Supplier" value="'+esc(m.sup)+'">'+
+      '<input data-msku="'+i+'" placeholder="SKU" value="'+esc(m.sku)+'">'+
+      '<input class="full" data-mcat="'+i+'" placeholder="Category (e.g. Door hardware)" value="'+esc(m.cat)+'">'+
+      '<input class="num" data-mqty="'+i+'" inputmode="decimal" placeholder="Qty" value="'+esc(m.qty)+'">'+
+      '<input class="num" data-mcost="'+i+'" inputmode="decimal" placeholder="$ cost" value="'+esc(m.cost)+'">'+
+      '<input class="full" data-mlink="'+i+'" placeholder="Product link (optional)" value="'+esc(m.link)+'"></div>'+
+      '<div class="ctrls"><span class="mini mu">MU<input class="num" data-mmu="'+i+'" inputmode="decimal" value="'+esc(m.mu||0)+'">%</span>'+
+      '<button class="taxchip'+(m.tax!==false?' on':'')+'" data-mtax="'+i+'">'+(m.tax!==false?'\u2611 GST':'\u2610 GST')+'</button>'+
+      (m.link?'<a class="lnk" href="'+esc(m.link)+'" target="_blank" rel="noopener">↗ Price</a>':'')+
+      '<button class="savecat" data-msave="'+i+'">Submit</button>'+
+      '<button class="rm" data-mrm="'+i+'">Remove</button></div>';
+    ml.appendChild(row);});
+  refreshTotals();
+}
+function refreshTotals(){const c=compute();
+  $("#totLabour").textContent=money(c.labour);$("#totMat").textContent=money(c.matCharged);$("#totTravel").textContent=money(c.travel);
+  $("#minFlag").classList.toggle("on",c.labour>0&&c.labour<S.hmin);
+  $("#barTotal").textContent=money(c.balance);$("#barGst").textContent=money(c.gst);
+  $("#dLabour").textContent=money(c.labourOnly);$("#dMat").textContent=money(c.matCharged);$("#dDeliv").textContent=money(c.delivery);$("#dTravel2").textContent=money(c.travel);
+  $("#dGroup1").textContent=money(c.matCharged+c.delivery+c.travel);$("#dGroup2").textContent=money(c.labourOnly);
+  $("#rowDeliv").style.display=c.delivery>0.001?"flex":"none";
+  $("#dSub").textContent=money(c.sub);$("#dGstLbl").textContent="GST ("+(+S.gst)+"%)";$("#dGst").textContent=money(c.gst);$("#dTot").textContent=money(c.total);
+  const hasSur=c.surcharge>0.0001;
+  $("#rowSur").style.display=hasSur?"flex":"none";$("#rowCust").style.display=hasSur?"flex":"none";
+  const rateStr=[((+c.pm.pct)?(+c.pm.pct)+"%":""),((+c.pm.fixed)?("$"+(+c.pm.fixed)):"")].filter(Boolean).join(" + ");
+  $("#dPayName").textContent=c.pm.label+" fee"+(rateStr?(" ("+rateStr+")"):"");$("#dSur").textContent="+"+money(c.surcharge);$("#dCustomer").textContent=money(c.customer);
+  const hasDep=c.deposit>0.0001;
+  $("#rowDep").style.display=hasDep?"flex":"none";$("#rowBal").style.display=hasDep?"flex":"none";
+  $("#dDep").textContent="–"+money(c.deposit);$("#dBal").textContent=money(c.balance);
+  $("#payTot").textContent=c.pm.label;updatePayHint(c);
+  $("#modeHint").textContent=(est.mode==="contractor")?("Contractor · –"+(+S.contractor)+"% labour"):"";
+  var rc=$("#rowCon");if(rc){if(est.mode==="contractor"&&c.labourSaved>0.0001){rc.style.display="flex";$("#conLbl").textContent="Contractor rate (–"+(+S.contractor)+"% labour)";$("#dCon").textContent="–"+money(c.labourSaved);}else rc.style.display="none";}
+  autosaveEst();
+}
+function updatePayHint(c){const h=$("#payHint");if(!h)return;
+  if(c.surcharge>0){const cash=(master.payments[0]&&master.payments[0].label)||"cash";
+    h.innerHTML="Adds <b style='color:var(--red)'>+"+money(c.surcharge)+"</b> for "+esc(c.pm.label)+". If the customer asks, paying by <b>"+esc(cash)+"</b> or e-transfer avoids this.";}
+  else h.innerHTML="";}
+const autosaveEst=debounce(()=>Cache.set("estimate:current",JSON.stringify(est)),500);
+
+$("#lineList").addEventListener("click",e=>{const d=e.target.dataset;
+  if(d.inc!=null){est.lines[+d.inc].qty=num(est.lines[+d.inc].qty)+1;render();}
+  else if(d.dec!=null){est.lines[+d.dec].qty=Math.max(0,num(est.lines[+d.dec].qty)-1);render();}
+  else if(d.rm!=null){est.lines.splice(+d.rm,1);render();}
+  else if(d.tax!=null){est.lines[+d.tax].tax=!(est.lines[+d.tax].tax!==false);render();}});
+$("#lineList").addEventListener("input",e=>{const d=e.target.dataset;
+  if(d.qty!=null)est.lines[+d.qty].qty=e.target.value;
+  else if(d.rate!=null)est.lines[+d.rate].rate=e.target.value;
+  else if(d.mu!=null)est.lines[+d.mu].mu=e.target.value;
+  const i=+(d.qty??d.rate??d.mu);const l=est.lines[i];if(l){const inp=$('[data-qty="'+i+'"]');if(inp){const base=num(l.qty)*num(l.rate),lt=base*(1+num(l.mu)/100);const b=inp.closest(".line");b.querySelector(".lt").textContent=money(lt);b.querySelector(".un").textContent=l.unit+" · base "+money(base);}}
+  refreshTotals();});
+
+$("#matList").addEventListener("click",e=>{const d=e.target.dataset;
+  if(d.mrm!=null){est.mats.splice(+d.mrm,1);render();}
+  else if(d.mtax!=null){est.mats[+d.mtax].tax=!(est.mats[+d.mtax].tax!==false);render();}
+  else if(d.msave!=null){saveMatToCatalog(est.mats[+d.msave]);}});
+$("#matList").addEventListener("input",e=>{const d=e.target.dataset;
+  if(d.mname!=null)est.mats[+d.mname].name=e.target.value;
+  else if(d.msup!=null)est.mats[+d.msup].sup=e.target.value;
+  else if(d.msku!=null)est.mats[+d.msku].sku=e.target.value;
+  else if(d.mcat!=null)est.mats[+d.mcat].cat=e.target.value;
+  else if(d.mlink!=null)est.mats[+d.mlink].link=e.target.value;
+  else if(d.mmu!=null){est.mats[+d.mmu].mu=e.target.value;updateMatRow(+d.mmu);}
+  else if(d.mqty!=null){est.mats[+d.mqty].qty=e.target.value;updateMatRow(+d.mqty);}
+  else if(d.mcost!=null){est.mats[+d.mcost].cost=e.target.value;updateMatRow(+d.mcost);}});
+function updateMatRow(i){const m=est.mats[i];if(!m)return;const ch=num(m.qty)*num(m.cost)*(1+num(m.mu)/100);
+  const inp=$('[data-mqty="'+i+'"]');if(inp)inp.closest(".matrow").querySelector(".mt").textContent=money(ch);refreshTotals();}
+$("#addMat").addEventListener("click",()=>{est.mats.push({name:"",sup:"",sku:"",cat:"",link:"",qty:"",cost:"",mu:S.markup,tax:true});render();$("#secMat").classList.remove("collapsed");});
+
+[["tVehKm","vehKm"],["tVanD","vanD"],["tVanK","vanK"],["tCubeD","cubeD"],["tCubeK","cubeK"]]
+.forEach(([id,k])=>$("#"+id).addEventListener("input",e=>{est.tr[k]=e.target.value;refreshTotals();}));
+$("#travelTax").addEventListener("change",e=>{est.travelTax=e.target.checked;refreshTotals();});
+$("#mCust").addEventListener("input",e=>{est.cust=e.target.value;autosaveEst();});
+$("#mAddr").addEventListener("input",e=>{est.addr=e.target.value;autosaveEst();});
+$("#mCity").addEventListener("input",e=>{est.city=e.target.value;autosaveEst();});
+$("#mProv").addEventListener("change",e=>{est.prov=e.target.value;autosaveEst();});
+$("#mPostal").addEventListener("input",e=>{est.postal=e.target.value;autosaveEst();});
+$("#mDate").addEventListener("input",e=>{est.date=e.target.value;autosaveEst();});
+$("#mPhone").addEventListener("input",e=>{est.phone=e.target.value;autosaveEst();});
+$("#mEmail").addEventListener("input",e=>{est.email=e.target.value;autosaveEst();});
+$("#mNotes").addEventListener("input",e=>{est.notes=e.target.value;autosaveEst();});
+$("#mDeposit").addEventListener("input",e=>{est.deposit=e.target.value;refreshTotals();});
+$("#mNum").addEventListener("input",e=>{est.docNum=e.target.value;autosaveEst();});
+$("#segReg").addEventListener("click",()=>{est.mode="regular";$("#segReg").classList.add("on");$("#segCon").classList.remove("on");refreshTotals();});
+$("#segCon").addEventListener("click",()=>{est.mode="contractor";$("#segCon").classList.add("on");$("#segReg").classList.remove("on");refreshTotals();});
+function buildPaySelect(){const sel=$("#paySel");if(!sel)return;sel.innerHTML="";
+  (master.payments||PAYDEF).forEach((p,i)=>{const o=document.createElement("option");o.value=i;o.textContent=p.label;sel.appendChild(o);});
+  if(est.payIdx>=sel.options.length)est.payIdx=0;sel.value=est.payIdx;}
+$("#paySel").addEventListener("change",e=>{est.payIdx=+e.target.value;refreshTotals();autosaveEst();});
+
+document.addEventListener("click",e=>{const h=e.target.closest("[data-toggle]");if(h)h.closest("section").classList.toggle("collapsed");});
+$("#barMain").addEventListener("click",()=>$("#bar").classList.toggle("open"));
+
+function openScrim(id){$(id).classList.add("on");}
+function closeScrim(s){s.classList.remove("on");}
+document.querySelectorAll(".scrim").forEach(s=>{s.addEventListener("click",e=>{if(e.target===s)closeScrim(s);});
+  s.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeScrim(s)));});
+
+function buildPicker(filter){const box=$("#svcList");box.innerHTML="";
+  const f=(filter||"").toLowerCase().trim(),groups={};
+  catalog().forEach(it=>{if(f&&it.n.toLowerCase().indexOf(f)<0&&(""+it.c).toLowerCase().indexOf(f)<0)return;const key=it.g+" · "+it.c;(groups[key]=groups[key]||[]).push(it);});
+  const keys=Object.keys(groups);
+  if(!keys.length){box.appendChild(el("div","empty","No matches. Add new ones in Scribe Data (Prices →)."));return;}
+  keys.forEach(k=>{box.appendChild(el("div","catlbl",k));
+    groups[k].forEach(it=>{const b=el("button","pick");
+      const pill=it.g==="Door"?'<span class="pill door">DOOR</span>':(it.g==="Handyman"?'<span class="pill hand">HANDY</span>':'<span class="pill cust">'+esc(it.g).toUpperCase()+'</span>');
+      b.innerHTML='<div><div class="pn">'+esc(it.n)+pill+'</div><div class="pu">'+esc(it.u)+'</div></div><div class="pr">$'+it.r+'</div>';
+      b.addEventListener("click",()=>{addLine(it);closeScrim($("#svcScrim"));});box.appendChild(b);});});}
+function addLine(it){const ex=est.lines.find(l=>l.name===it.n&&l.rate==it.r);
+  if(ex)ex.qty=num(ex.qty)+1;else est.lines.push({name:it.n,unit:it.u,rate:it.r,qty:1,mu:0,tax:true});render();toast("Added");}
+$("#addSvc").addEventListener("click",()=>{$("#svcSearch").value="";buildPicker("");openScrim("#svcScrim");setTimeout(()=>$("#svcSearch").focus(),60);});
+$("#svcSearch").addEventListener("input",e=>buildPicker(e.target.value));
+
+$("#addMatCat").addEventListener("click",()=>{$("#matSearch").value="";renderMatPick("");openScrim("#matCatScrim");});
+$("#matSearch").addEventListener("input",e=>renderMatPick(e.target.value));
+function renderMatPick(filter){const box=$("#matCatList");box.innerHTML="";
+  const f=(filter||"").toLowerCase().trim();
+  const items=master.materials.filter(m=>m.status!=="pending"&&(!f||m.name.toLowerCase().indexOf(f)>=0||(""+(m.sup||"")).toLowerCase().indexOf(f)>=0||(""+(m.cat||"")).toLowerCase().indexOf(f)>=0));
+  if(!items.length){box.appendChild(el("div","empty","No saved materials match. Add them in Scribe Data (Prices →)."));return;}
+  const groups={};items.forEach(m=>{const k=m.cat||"Uncategorized";(groups[k]=groups[k]||[]).push(m);});
+  Object.keys(groups).sort().forEach(k=>{box.appendChild(el("div","catlbl",esc(k)));
+    groups[k].forEach(m=>{const row=el("div","pick");
+      const det=[m.sup,m.sku?("SKU "+m.sku):"","cost "+money(num(m.cost)),(num(m.mu)||0)+"% MU"].filter(Boolean).join(" · ");
+      row.innerHTML='<div><div class="pn">'+esc(m.name)+(m.link?' <a class="lnk" style="height:auto;padding:1px 6px;display:inline" href="'+esc(m.link)+'" target="_blank" rel="noopener">↗</a>':'')+'</div><div class="pu">'+esc(det)+'</div></div><button class="si-add">Add</button>';
+      row.querySelector(".si-add").addEventListener("click",()=>{est.mats.push({name:m.name,sup:m.sup,sku:m.sku,cat:m.cat||"",link:m.link||"",qty:1,cost:m.cost,mu:m.mu,tax:true});
+        $("#secMat").classList.remove("collapsed");render();closeScrim($("#matCatScrim"));toast("Added");});
+      box.appendChild(row);});});}
+function saveMatToCatalog(m){if(!m.name){toast("Name the material first");return;}
+  master.materials.push({id:"mat_"+Date.now(),name:m.name,sup:m.sup||"",sku:m.sku||"",cat:m.cat||"",cost:num(m.cost),mu:num(m.mu||S.markup),link:m.link||"",status:"pending"});
+  saveMaster();toast("Submitted for admin review");}
+
+$("#bCopy").addEventListener("click",()=>{const c=compute();
+  let t="TheDoorPro — "+est.docType+(est.docNum?(" #"+est.docNum):"")+"\n";
+  if(est.cust)t+="Customer: "+est.cust+"\n";if(addrLine())t+="Address: "+addrLine()+"\n";if(est.phone)t+="Phone: "+est.phone+"\n";t+="Date: "+est.date+"\n\nLABOUR & SERVICES\n";
+  est.lines.forEach(l=>{const base=num(l.qty)*num(l.rate),lt=base*(1+num(l.mu)/100);
+    t+="• "+l.qty+" x "+l.name+" @ "+money(num(l.rate))+(num(l.mu)?(" +"+num(l.mu)+"%"):"")+" = "+money(lt)+(l.tax===false?" (no GST)":"")+"\n";});
+  if(est.mats.length){t+="\nMATERIALS\n";est.mats.forEach(m=>{const ch=num(m.qty)*num(m.cost)*(1+num(m.mu)/100);if(m.name||ch)t+="• "+(m.name||"Material")+" — "+money(ch)+"\n";});}
+  t+="\nLabour: "+money(c.labour)+"\nMaterials: "+money(c.matCharged)+"\nTravel: "+money(c.veh)+"\nTruck: "+money(c.truck)+
+     "\nSubtotal: "+money(c.sub)+"\nGST: "+money(c.gst)+"\nTotal: "+money(c.total)+
+     "\nPayment: "+c.pm.label+(c.surcharge>0?(" surcharge +"+money(c.surcharge)):"")+"\nCUSTOMER PAYS: "+money(c.customer)+
+     (c.deposit>0?("\nDeposit paid: -"+money(c.deposit)+"\nBALANCE DUE: "+money(c.balance)):"")+"\n";
+  $("#copyBox").value=t;openScrim("#copyScrim");});
+$("#copyBtn").addEventListener("click",()=>{const ta=$("#copyBox");ta.select();
+  let ok=false;try{ok=document.execCommand("copy");}catch(e){}
+  if(!ok&&navigator.clipboard){navigator.clipboard.writeText(ta.value).then(()=>toast("Copied")).catch(()=>toast("Select & copy manually"));}else toast(ok?"Copied":"Select & copy manually");});
+
+function buildPrint(){const c=compute();const rows=[];
+  est.lines.forEach(l=>{const amt=num(l.qty)*num(l.rate)*(1+num(l.mu)/100);if(num(l.qty)!==0||amt!==0)rows.push([esc(l.name),num(l.qty)||1,amt]);});
+  est.mats.forEach(m=>{const amt=num(m.qty)*num(m.cost)*(1+num(m.mu)/100);if(m.name||amt)rows.push([esc(m.name||"Material"),num(m.qty)||1,amt]);});
+  if(c.travel>0.001)rows.push(["Travel &amp; truck","",c.travel]);
+  let tr=rows.map(r=>'<tr><td>'+r[0]+'</td><td class="r">'+(r[1]===""?"":r[1])+'</td><td class="r">'+money(r[2])+'</td></tr>').join("");
+  if(!tr)tr='<tr><td colspan="3" style="color:#888">No line items yet.</td></tr>';
+  let totals='<div class="row"><span>Subtotal</span><span>'+money(c.sub)+'</span></div>'+
+    '<div class="row"><span>GST ('+(+S.gst)+'%)</span><span>'+money(c.gst)+'</span></div>'+
+    '<div class="row grand"><span>TOTAL</span><span>'+money(c.total)+'</span></div>';
+  if(c.surcharge>0.001)totals+='<div class="row"><span>'+esc(c.pm.label)+' fee</span><span>+'+money(c.surcharge)+'</span></div>'+
+    '<div class="row grand"><span>Amount payable</span><span>'+money(c.customer)+'</span></div>';
+  if(c.deposit>0.001)totals+='<div class="row"><span>Deposit paid</span><span>&#8211;'+money(c.deposit)+'</span></div>'+
+    '<div class="row grand"><span>Balance due</span><span>'+money(c.balance)+'</span></div>';
+  const cityLine=[[est.city,est.prov].filter(Boolean).join(", "),est.postal].filter(Boolean).join(" ");
+  const party='<div><h4>Billed to</h4>'+esc(est.cust||"—")+(est.addr?('<br>'+esc(est.addr)):'')+(cityLine?('<br>'+esc(cityLine)):'')+(est.phone?('<br>'+esc(est.phone)):'')+(est.email?('<br>'+esc(est.email)):'')+'</div>';
+  const docbox='<div class="pd-doc"><div class="big">'+esc(est.docType)+'</div>'+(est.estNumber?(esc(est.estNumber)+'<br>'):'')+esc(est.date)+(est.docNum?('<br>Joist #: '+esc(est.docNum)):'')+'<br>Payment: '+esc(c.pm.label)+'</div>';
+  const notes=est.notes?('<div class="pd-notes"><b>Scope of work</b>\n'+esc(est.notes)+'</div>'):'';
+  const valid=est.docType==="Estimate"?"This estimate is valid for 30 days from the date above.":"Thank you for your business.";
+  $("#printDoc").innerHTML=
+    '<div class="pd-head"><div><div class="pd-brand">The<span>Door</span>Pro</div><div class="pd-tag">Door installation &amp; repair · Calgary</div></div>'+docbox+'</div>'+
+    '<div class="pd-party">'+party+'</div>'+
+    '<table><thead><tr><th>Description</th><th class="r">Qty</th><th class="r">Amount</th></tr></thead><tbody>'+tr+'</tbody></table>'+
+    '<div class="pd-tot">'+totals+'</div>'+notes+
+    '<div class="pd-foot">TheDoorPro &nbsp;·&nbsp; thedoorpro.ca &nbsp;&nbsp;|&nbsp;&nbsp; '+valid+'</div>';
+  const fname=est.estNumber||("TheDoorPro-Estimate-"+(est.date||todayISO()));
+  return fname;}
+
+async function downloadPDF(){
+  const fname=buildPrint();
+  const el=document.getElementById("printDoc");
+  const prevStyle=el.getAttribute("style")||"";
+  el.style.cssText="display:block;position:fixed;left:-10000px;top:0;width:780px;background:#fff;color:#000;padding:28px";
+  try{
+    if(!window.html2canvas||!window.jspdf)throw new Error("libs");
+    const canvas=await html2canvas(el,{scale:2,backgroundColor:"#ffffff",useCORS:true});
+    const img=canvas.toDataURL("image/png");
+    const JS=window.jspdf.jsPDF;const pdf=new JS("p","pt","a4");
+    const pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight();
+    const iw=pw,ih=canvas.height*pw/canvas.width;
+    let pos=0,left=ih;
+    pdf.addImage(img,"PNG",0,pos,iw,ih,"","FAST");left-=ph;
+    while(left>0){pos-=ph;pdf.addPage();pdf.addImage(img,"PNG",0,pos,iw,ih,"","FAST");left-=ph;}
+    pdf.save(fname+".pdf");
+    el.setAttribute("style",prevStyle);
+    toast("PDF saved to your downloads");
+  }catch(e){
+    el.setAttribute("style",prevStyle);
+    const prevTitle=document.title;document.title=fname;
+    requestAnimationFrame(function(){setTimeout(function(){window.print();setTimeout(function(){document.title=prevTitle;},800);},80);});
+  }
+}
+$("#bPdf").addEventListener("click",async()=>{
+  try{if(!est.estNumber && !window.__quick){await saveCloud();}}catch(e){}
+  downloadPDF();
+});
+
+$("#bNew").addEventListener("click",()=>{
+  if(((est.lines&&est.lines.length)||(est.mats&&est.mats.length))&&!confirm("Start a new blank estimate? This clears the current one."))return;
+  est=newEstimate();currentJobId=null;Cache.set("estimate:currentId","");syncMeta();render();$("#bar").classList.remove("open");
+  document.querySelectorAll("section").forEach((s,i)=>{if(i>0)s.classList.add("collapsed");else s.classList.remove("collapsed");});
+  Cache.set("estimate:current",JSON.stringify(est));toast("New estimate");});
+
+// ---- cloud save / open (jobs API) ----
+function estTitle(){return est.cust||((est.docType||"Estimate")+(est.docNum?(" #"+est.docNum):""))||"Untitled";}
+async function saveCloud(){
+  if(window.__quick&&!((est.cust||"").trim())){
+    var _cb=document.getElementById("custBlock");if(_cb)_cb.style.display="";
+    toast("Add the customer's name to save");
+    var _n=document.getElementById("mCust");if(_n){_n.focus();}
+    return false;
+  }
+  setSync("save");
+  try{
+    if(!est.profileId&&(est.cust||"").trim()){
+      try{const pr=await fetch("/api/profiles",{method:"PUT",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({name:est.cust,phone:est.phone,email:est.email,addr:{street:est.addr,city:est.city,prov:est.prov,postal:est.postal}})});
+        const pd=await pr.json();if(pd&&pd.id){est.profileId=pd.id;est.profileNumber=pd.number||"";}}catch(e){}
+    }
+    const c=compute();
+    const r=await fetch("/api/jobs",{method:"PUT",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({id:currentJobId,kind:"estimate",title:estTitle(),
+        customer:{name:est.cust,address:addrLine(),phone:est.phone,email:est.email},
+        profileId:est.profileId||"",profileNumber:est.profileNumber||"",
+        payload:{est},total:c.customer,status:(est.docType||"Estimate").toLowerCase()})});
+    if(!r.ok)throw 0;
+    const d=await r.json();currentJobId=d.id;Cache.set("estimate:currentId",currentJobId);
+    if(d.estNumber){est.estNumber=d.estNumber;$("#mEstNum").value=est.estNumber;autosaveEst();}
+    setSync("ok");
+    if(window.__quick){window.__quick=false;toast("Saved to new customer file");}
+    else{toast(est.estNumber?("Saved · "+est.estNumber):"Saved to cloud");}
+    return true;
+  }catch(e){setSync("ok");toast("Cloud save failed — kept on device");return false;}
+}
+async function openJobs(){
+  const box=$("#jobsList");box.innerHTML='<div class="note">Loading…</div>';openScrim("#jobsScrim");
+  try{
+    const r=await fetch("/api/jobs?mine=1&kind=estimate");const items=await r.json();
+    if(!Array.isArray(items)||!items.length){box.innerHTML='<div class="note">No saved estimates yet. Build one and tap Save.</div>';return;}
+    box.innerHTML=items.map(it=>{
+      const dt=it.updatedAt?new Date(it.updatedAt).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"";
+      return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;background:#11161a;border:1px solid rgba(255,255,255,.08);border-radius:10px;margin-bottom:8px">'+
+        '<div><div style="font-weight:600">'+esc(it.title||"Untitled")+'</div>'+
+        '<div style="font-size:11px;color:#969ca5">'+money(it.total||0)+' · '+dt+'</div></div>'+
+        '<div style="display:flex;gap:8px;align-items:center">'+
+          '<button class="add" data-open="'+esc(it.id)+'" style="height:auto;padding:7px 12px">Open</button>'+
+          '<button data-del="'+esc(it.id)+'" style="color:#e06a5b;background:none;border:1px solid rgba(224,106,91,.3);border-radius:7px;padding:5px 9px">🗑</button>'+
+        '</div></div>';
+    }).join("");
+  }catch(e){box.innerHTML='<div class="note">Couldn\'t load (are you online / deployed?).</div>';}
+}
+async function loadJob(id){
+  try{
+    const r=await fetch("/api/jobs?id="+encodeURIComponent(id));const rec=await r.json();
+    if(rec&&rec.payload&&rec.payload.est){
+      est=Object.assign(newEstimate(),rec.payload.est);
+      est.tr=Object.assign({vehKm:0,vanD:0,vanK:0,cubeD:0,cubeK:0},rec.payload.est.tr||{});
+      est.lines=(rec.payload.est.lines||[]).map(l=>Object.assign({mu:0,tax:true},l));
+      est.mats=(rec.payload.est.mats||[]).map(m=>Object.assign({mu:S.markup,tax:true,link:"",cat:""},m));
+      currentJobId=rec.id;Cache.set("estimate:currentId",currentJobId);
+      syncMeta();render();closeScrim($("#jobsScrim"));toast("Opened");
+    }
+  }catch(e){toast("Couldn't open that estimate");}
+}
+$("#bSave").addEventListener("click",function(){
+  if(window.__quick){
+    var c=compute();
+    var payload={est:est,total:(c.customer||c.total||0)};
+    try{localStorage.setItem("hinge:pendingEstimate",JSON.stringify(payload));}catch(e){}
+    location.href="/customers.html?new=1&fromQuick=1";
+    return;
+  }
+  saveCloud();
+});
+$("#bOpen").addEventListener("click",openJobs);
+$("#jobsList").addEventListener("click",e=>{
+  const o=e.target.closest("[data-open]");if(o){loadJob(o.dataset.open);return;}
+  const d=e.target.closest("[data-del]");if(d&&confirm("Delete this saved estimate?")){fetch("/api/jobs?id="+encodeURIComponent(d.dataset.del),{method:"DELETE"}).then(openJobs);}
+});
+
+function syncMeta(){$("#mCust").value=est.cust||"";$("#mAddr").value=est.addr||"";$("#mCity").value=est.city||"";$("#mProv").value=est.prov||"";$("#mPostal").value=est.postal||"";$("#mDate").value=est.date||todayISO();
+  $("#mPhone").value=est.phone||"";$("#mEmail").value=est.email||"";$("#mNotes").value=est.notes||"";$("#mDeposit").value=est.deposit||0;
+  $("#mNum").value=est.docNum||"";$("#mEstNum").value=est.estNumber||"";const con=est.mode==="contractor";$("#segCon").classList.toggle("on",con);$("#segReg").classList.toggle("on",!con);
+  $("#tVehKm").value=est.tr.vehKm||0;$("#tVanD").value=est.tr.vanD||0;$("#tVanK").value=est.tr.vanK||0;$("#tCubeD").value=est.tr.cubeD||0;$("#tCubeK").value=est.tr.cubeK||0;$("#travelTax").checked=est.travelTax!==false;
+  buildPaySelect();applyCustView();}
+function applyCustView(){
+  const fromFile=!!est.profileId;const cb=$("#custBlock"),cs=$("#custSummary");
+  if(cb)cb.style.display=fromFile?"none":"contents";
+  if(cs){cs.style.display=fromFile?"block":"none";
+    if(fromFile)$("#custSumTxt").textContent=(est.cust||"—")+(est.addr?(" · "+est.addr):"");}
+}
+let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1400);}
+
+function applyMaster(b){if(b&&Array.isArray(b.catalog)&&b.catalog.length)master.catalog=b.catalog;
+  if(b&&Array.isArray(b.materials))master.materials=b.materials;
+  if(b&&Array.isArray(b.payments)&&b.payments.length)master.payments=b.payments;
+  if(b&&b.settings&&typeof b.settings==="object")master.settings=Object.assign({},DEFAULTS,b.settings);S=master.settings;}
+
+const GRID_SVC=[{"n":"A2000 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A2000 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A300 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A300 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A3000 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":400.0},{"n":"A3000 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":475.0},{"n":"A400 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A400 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":349.0},{"n":"A4000 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":499.0},{"n":"A4000 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":575.0},{"n":"Complimentary On-site Consultation (1 hour)","g":"Door","c":"Storm Doors","u":"job","r":0},{"n":"Storm Door Delivery — Basic (front of home only)","g":"Door","c":"Storm Doors","u":"each","r":65.0},{"n":"Storm Door Delivery — Premium (inside home or garage)","g":"Door","c":"Storm Doors","u":"each","r":120.0},{"n":"Old Storm Door Disposal — Full removal from property","g":"Door","c":"Storm Doors","u":"each","r":120.0},{"n":"EMCO 100 Storm Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":325.0},{"n":"EMCO 100 Storm Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":375.0},{"n":"LuminAire Double Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":399.0},{"n":"LuminAire Double Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":399.0},{"n":"LuminAire Single Door — Installation Labour Only","g":"Door","c":"Storm Doors","u":"door","r":299.0},{"n":"LuminAire Single Door — Supply & Installation Labour + Admin","g":"Door","c":"Storm Doors","u":"door","r":299.0},{"n":"On-site Consultation — Professional door assessment (1 hour)","g":"Door","c":"Storm Doors","u":"job","r":120.0}];
+const GRID_MAT=[{"name":"PVC Door Stop Trim — 3/8 x 1-1/4 x 84\"","sku":"3/8 x 1-1/4 x 84 PVC Door Stop Trim","cat":"Trim","cost":8.86},{"name":"Flat Utility Trim Moulding — 5/16 x 5 7/8 x 96\"","sku":"5/16 x 5 7/8 x 96 Flat Utility Trim Moulding","cat":"Trim","cost":41.08},{"name":"Andersen A2000 32x80 White Universal Full View Retractable","sku":"A2000 32x80 WHT UNI (FVR)","cat":"Storm Doors","cost":598.0},{"name":"Andersen A2000 34x80 White Universal Full View Retractable","sku":"A2000 34x80 WHT UNI (FVR)","cat":"Storm Doors","cost":598.0},{"name":"Andersen A2000 36x80 White Universal Full View Retractable","sku":"A2000 36x80 WHT UNI (FVR)","cat":"Storm Doors","cost":598.0},{"name":"Andersen A300 32x80 White Universal 3/4 Light Panel","sku":"A300 32x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":429.0},{"name":"Andersen A300 34x80 White Universal 3/4 Light Panel","sku":"A300 34x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":429.0},{"name":"Andersen A300 36x80 White Universal 3/4 Light Panel","sku":"A300 36x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":429.0},{"name":"Andersen A3000 32x80 Black LH Full View Retractable","sku":"A3000 32x80 BLK LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 Black RH Full View Retractable","sku":"A3000 32x80 BLK RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 White LH Full View Interchangeable","sku":"A3000 32x80 WHT LH (FVI)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 White LH Full View Retractable","sku":"A3000 32x80 WHT LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 White RH Full View Interchangeable","sku":"A3000 32x80 WHT RH (FVI)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 32x80 White RH Full View Retractable","sku":"A3000 32x80 WHT RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 34x80 Black LH Full View Retractable","sku":"A3000 34x80 BLK LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 34x80 Black RH Full View Retractable","sku":"A3000 34x80 BLK RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 34x80 White LH Full View Retractable","sku":"A3000 34x80 WHT LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 Black LH Full View Retractable","sku":"A3000 36x80 BLK LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 Black RH Full View Retractable","sku":"A3000 36x80 BLK RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 White LH Full View Interchangeable","sku":"A3000 36x80 WHT LH (FVI)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 White LH Full View Retractable","sku":"A3000 36x80 WHT LH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 White RH Full View Interchangeable","sku":"A3000 36x80 WHT RH (FVI)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A3000 36x80 White RH Full View Retractable","sku":"A3000 36x80 WHT RH (FVR)","cat":"Storm Doors","cost":575.0},{"name":"Andersen A400 32x80 White Universal 3/4 Light Retractable","sku":"A400 32x80 WHT UNI (3/4 LIGHT RETRACT)","cat":"Storm Doors","cost":549.0},{"name":"Andersen A400 34x80 White Universal 3/4 Light Retractable","sku":"A400 34x80 WHT UNI (3/4 LIGHT RETRACT)","cat":"Storm Doors","cost":549.0},{"name":"Andersen A400 36x80 White Universal 3/4 Light Retractable","sku":"A400 36x80 WHT UNI (3/4 LIGHT RETRACT)","cat":"Storm Doors","cost":549.0},{"name":"Andersen A4000 32x80 Black LH Full View Retractable","sku":"A4000 32x80 BLK LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 32x80 Black RH Full View Retractable","sku":"A4000 32x80 BLK RH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 32x80 White LH Full View Retractable","sku":"A4000 32x80 WHT LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 34x80 Black LH Full View Retractable","sku":"A4000 34x80 BLK LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 34x80 Black RH Full View Retractable","sku":"A4000 34x80 BLK RH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 34x80 White LH Full View Retractable","sku":"A4000 34x80 WHT LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 36x80 Black LH Full View Retractable","sku":"A4000 36x80 BLK LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 36x80 Black RH Full View Retractable","sku":"A4000 36x80 BLK RH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"Andersen A4000 36x80 White LH Full View Retractable","sku":"A4000 36x80 WHT LH (FVR)","cat":"Storm Doors","cost":798.0},{"name":"EMCO 100 32x80 White Universal 3/4 Light Panel","sku":"EMCO 32x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":349.0},{"name":"EMCO 100 34x80 White Universal 3/4 Light Panel","sku":"EMCO 34x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":349.0},{"name":"EMCO 100 36x80 White Universal 3/4 Light Panel","sku":"EMCO 36x80 WHT UNI (3/4 LIGHT)","cat":"Storm Doors","cost":349.0},{"name":"Hardware Kit — Modern Brushed Dark Nickel (A3000/A4000)","sku":"HWKIT A3000/4000 MDRN BDRK NIKL","cat":"Hardware","cost":149.0},{"name":"Hardware Kit — Modern Black (A3000/A4000)","sku":"HWKIT A3000/4000 MDRN BLK","cat":"Hardware","cost":149.0},{"name":"Hardware Kit — Modern Venetian Bronze (A3000/A4000)","sku":"HWKIT A3000/4000 MDRN VEN BRNZ","cat":"Hardware","cost":149.0},{"name":"Hardware Kit — Traditional Nickel (A3000/A4000)","sku":"HWKIT A3000/4000 TDNL NIKL","cat":"Hardware","cost":129.0},{"name":"Hardware Kit — Traditional Oil Rubbed Bronze (A3000/A4000)","sku":"HWKIT A3000/4000 TDNL OR BRNZ","cat":"Hardware","cost":129.0},{"name":"Interior Door Slab — 32x80 Solid Core","sku":"INT SLAB 32x80 SOLID CORE","cat":"Interior","cost":0},{"name":"LuminAire Single Retractable Screen 32-36\"W x 78\"H Black","sku":"LUMNA SGL DR 32-36Wx78H BLK SCRN","cat":"Storm Doors","cost":0},{"name":"LuminAire Single Retractable Screen 32-36\"W x 78\"H White","sku":"LUMNA SGL DR 32-36Wx78H WHT SCRN","cat":"Storm Doors","cost":450.0},{"name":"LuminAire Single Retractable Screen 32-36\"W x 80\"H Black","sku":"LUMNA SGL DR 32-36Wx80H BLK SCRN","cat":"Storm Doors","cost":429.0},{"name":"LuminAire Single Retractable Screen 32-36\"W x 80\"H White","sku":"LUMNA SGL DR 32-36Wx80H WHT SCRN","cat":"Storm Doors","cost":398.0}];
+function seedGrid(){
+  if(num(S.gridSeed)>=1)return;
+  var have={};master.catalog.forEach(function(x){have[x.n]=1;});
+  GRID_SVC.forEach(function(s){if(!have[s.n])master.catalog.push({n:s.n,g:s.g,c:s.c,u:s.u,r:s.r});});
+  var hm={};master.materials.forEach(function(m){hm[m.name]=1;});
+  GRID_MAT.forEach(function(m){if(!hm[m.name])master.materials.push({id:'mat_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),name:m.name,sup:'Home Depot',sku:m.sku||'',cat:m.cat||'',cost:m.cost||0,mu:0,link:'',status:'approved'});});
+  S.gridSeed=1;saveMaster();
+}
+(async function init(){
+  setSync("save");
+  const server=await Api.load();
+  if(server&&Array.isArray(server.catalog)){syncMode="server";applyMaster(server);
+    if(!server.catalog.length){master.catalog=BUILTIN.map(x=>Object.assign({},x));master.settings=Object.assign({},DEFAULTS);S=master.settings;saveMaster();}}
+  else{syncMode="local";const raw=await Cache.get("master:scribe");if(raw){try{applyMaster(JSON.parse(raw));}catch(e){}}}
+  seedGrid();setSync("ok");
+  const ce=await Cache.get("estimate:current");
+  if(ce){try{const e=JSON.parse(ce);est=Object.assign(newEstimate(),e);
+    est.tr=Object.assign({vehKm:0,vanD:0,vanK:0,cubeD:0,cubeK:0},e.tr||{});
+    est.lines=(e.lines||[]).map(l=>Object.assign({mu:0,tax:true},l));
+    est.mats=(e.mats||[]).map(m=>Object.assign({mu:S.markup,tax:true,link:"",cat:""},m));}catch(e){}}
+  const cid=await Cache.get("estimate:currentId");if(cid)currentJobId=cid;
+  syncMeta();render();
+  const qid=new URLSearchParams(location.search).get("id");if(qid)loadJob(qid);
+  (function(){
+    const q=new URLSearchParams(location.search);const pid=q.get("pid");
+    if(pid&&!qid){
+      est=newEstimate();currentJobId=null;Cache.set("estimate:currentId","");
+      est.profileId=pid;est.profileNumber=q.get("pnum")||"";
+      est.cust=q.get("cust")||"";est.addr=q.get("addr")||"";
+      est.city=q.get("city")||"";est.prov=q.get("prov")||"";
+      est.postal=q.get("postal")||"";est.phone=q.get("phone")||"";
+      est.email=q.get("email")||"";
+      Cache.set("estimate:current",JSON.stringify(est));
+      syncMeta();render();toast("New estimate for "+(est.cust||"customer"));
+    }
+    const quick=q.get("quick");
+    if(quick&&!qid&&!pid){
+      est=newEstimate();currentJobId=null;
+      Cache.set("estimate:current",JSON.stringify(est));Cache.set("estimate:currentId","");
+      window.__quick=true;syncMeta();render();
+      var cb=document.getElementById("custBlock");if(cb)cb.style.display="none";
+      ["bOpen","bCopy","bNew"].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display="none";});
+      var bs=document.getElementById("bSave");if(bs)bs.textContent="Create new customer";
+      toast("Quick estimate — Create new customer when they're ready");
+    }
+  })();
+})();
+</script>
+<script>
+(function(){var b=document.getElementById('tnavBtn'),m=document.getElementById('tnavMenu');if(!b||!m)return;
+function c(){m.classList.remove('open');b.setAttribute('aria-expanded','false');}
+b.addEventListener('click',function(e){e.stopPropagation();var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});
+document.addEventListener('click',function(e){if(!m.contains(e.target)&&!b.contains(e.target))c();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')c();});})();
+</script>
+<script>
+/* consistent role-gate: hide admin-only menu items for employees */
+fetch('/api/me',{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(d){
+  var admin=(d&&(d.role==='admin'||d.role==='super'));
+  if(!admin){Array.prototype.forEach.call(document.querySelectorAll('[data-role-min="admin"]'),function(e){e.style.display='none';});}
+}).catch(function(){});
+</script>
+</body>
+</html>

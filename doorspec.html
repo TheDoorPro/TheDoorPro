@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#15181c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Hinge">
+<script>try{var t=localStorage.getItem('hinge-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<meta name="robots" content="noindex, nofollow">
+<title>Door Spec — TheDoorPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15181c; --panel:#20262c; --panel-2:#262d35; --field:#11161a;
+    --brass:#b5893f; --brass-hi:#e6c47e; --brass-deep:#7e5e27;
+    --text:#e8e2d5; --parchment:#ece4d4; --muted:#969ca5; --green:#43b888; --red:#e06a5b;
+    --line:rgba(230,196,126,.16); --line-soft:rgba(255,255,255,.08);
+    --mono:ui-monospace,"SF Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:radial-gradient(1100px 560px at 50% -14%,#20262d 0%,rgba(32,38,45,0) 60%),var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.45;padding-bottom:120px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,select,textarea{font-family:inherit;font-size:15px;color:var(--text)}
+  input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--brass-hi);outline-offset:1px}
+  .num{font-family:var(--mono)}
+
+  header{background:linear-gradient(180deg,#1b1f24,#15181c);border-bottom:1px solid var(--line-soft);padding:13px 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:9px}
+  .bdot{width:9px;height:9px;border-radius:50%;background:linear-gradient(180deg,var(--brass-hi),var(--brass-deep));box-shadow:0 0 0 3px rgba(230,196,126,.10)}
+  .wm{font-family:"Fraunces",serif;font-weight:600;font-size:21px;color:var(--parchment)}
+  .wm em{font-style:italic;color:var(--brass-hi)}
+  .hd-right{display:flex;align-items:center;gap:12px}
+  .sync{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--green)}
+  .tnav-so{color:var(--muted);text-decoration:none;font-size:12.5px;border:1px solid var(--line-soft);padding:7px 12px;border-radius:9px}
+  .tnav-so:hover{color:var(--parchment);border-color:var(--line)}
+  .tnav-burger{width:42px;height:38px;border:1px solid var(--line-soft);border-radius:9px;background:rgba(255,255,255,.02);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer}
+  .tnav-burger span{display:block;width:18px;height:2px;border-radius:2px;background:var(--brass-hi);transition:.22s}
+  .tnav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .tnav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .tnav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  .tnav-menu{position:fixed;top:60px;right:16px;width:240px;z-index:300;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -22px rgba(0,0,0,.8);padding:8px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.2s}
+  .tnav-menu.open{opacity:1;visibility:visible;transform:translateY(0)}
+  .tnav-menu a,.tnav-menu .tnav-dis{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:9px;text-decoration:none;color:var(--parchment);font-size:14px;font-weight:500}
+  .tnav-menu a:hover{background:rgba(230,196,126,.08)}
+  .tnav-menu .tnav-dis{color:var(--muted)}
+  .tnav-tag{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:3px 8px;border-radius:14px}
+  .tnav-tag.admin{color:#11141a;background:linear-gradient(180deg,var(--brass-hi),var(--brass))}
+  .tnav-tag.soon{color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--line-soft)}
+  .tnav-div{height:1px;background:var(--line-soft);margin:6px 8px}
+
+  main{padding-top:18px}
+  .lede{text-align:center;color:var(--muted);font-size:13px;margin-bottom:18px}
+  .lede b{color:var(--parchment)}
+
+  .card{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line-soft);border-radius:var(--radius);padding:18px 16px;margin-bottom:14px}
+  .card h2{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:18px;color:var(--brass-hi);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .card h2 .idx{font-family:var(--sans);font-style:normal;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  label.fl{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px 12px}
+  .full{grid-column:1/-1}
+  .fld input,.fld select,.fld textarea{width:100%;background:var(--field);border:1px solid var(--line-soft);border-radius:9px;padding:10px 11px}
+  .fld textarea{min-height:62px;resize:vertical}
+  .fld{margin-bottom:11px}
+
+  .seg{display:inline-flex;background:var(--field);border:1px solid var(--line-soft);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+  .seg button{padding:8px 13px;font-size:12.5px;font-weight:600;color:var(--muted);border-radius:7px;transition:.16s}
+  .seg button.on{background:linear-gradient(180deg,var(--brass-hi),var(--brass));color:#15110a;font-weight:700}
+
+  .sub{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--brass-hi);font-weight:700;margin:16px 0 9px;border-bottom:1px solid var(--line-soft);padding-bottom:6px}
+  .hint{font-size:11.5px;color:var(--muted);margin:-4px 0 9px;line-height:1.4}
+
+  .hingerow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+  .hingerow .fld{margin:0}
+
+  .flag{display:none;background:rgba(224,106,91,.12);border:1px solid rgba(224,106,91,.42);color:#f0a89f;font-size:12.5px;font-weight:600;padding:9px 11px;border-radius:9px;margin-top:6px}
+  .flag.on{display:block}
+  .flag .lbl{color:var(--red);font-weight:800;letter-spacing:.02em}
+
+  .chk{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--text);padding:7px 0}
+  .chk input{width:18px;height:18px;accent-color:var(--brass)}
+
+  .exwrap{display:none}.exwrap.on{display:block}
+
+  .rmdoor{color:var(--red);font-size:12px;font-weight:600;background:rgba(224,106,91,.1);border:1px solid rgba(224,106,91,.3);padding:5px 11px;border-radius:8px}
+  .adddoor{width:100%;background:rgba(255,255,255,.02);border:1px dashed var(--line);color:var(--brass-hi);font-weight:700;font-size:14px;padding:14px;border-radius:12px;margin-bottom:14px}
+  .adddoor:hover{background:rgba(230,196,126,.06)}
+
+  /* diagram */
+  .diagram{background:var(--field);border:1px solid var(--line-soft);border-radius:12px;padding:14px;text-align:center}
+  .diagram svg{max-width:320px;width:100%;height:auto}
+
+  /* bottom bar */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:90;background:linear-gradient(180deg,#1b1f24,#15181c);border-top:3px solid var(--brass);padding:12px 16px}
+  .bar-in{max-width:760px;margin:0 auto;display:flex;gap:9px;align-items:center}
+  .bar .meta{flex:1;font-size:12px;color:var(--muted)}
+  .bar .meta b{color:var(--parchment);font-size:14px}
+  .bar button{padding:11px 15px;border-radius:10px;font-weight:700;font-size:13px}
+  .b-new{background:var(--panel-2);color:var(--muted);border:1px solid var(--line-soft)}
+  .b-pdf{background:linear-gradient(180deg,var(--brass-hi),var(--brass));color:#15110a}
+
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;background:var(--panel-2);color:var(--text);border:1px solid var(--line);padding:10px 18px;border-radius:24px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.on{opacity:1}
+
+  .modal{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.55);display:none;align-items:flex-end}
+  .modal.on{display:flex}
+  .sheet{background:var(--panel);border-top:3px solid var(--brass);border-radius:16px 16px 0 0;width:100%;max-width:760px;margin:0 auto;max-height:82vh;overflow:auto;padding:16px 16px 28px}
+  .sheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+  .sheet-h b{font-family:"Fraunces",serif;font-style:italic;color:var(--brass-hi);font-size:18px}
+  .sheet-h button{color:var(--muted);font-size:20px;line-height:1}
+  .m-new{width:100%;border:1px dashed var(--line);color:var(--brass-hi);font-weight:700;padding:12px;border-radius:10px;margin-bottom:12px;background:rgba(255,255,255,.02)}
+  .m-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;background:var(--field);border:1px solid var(--line-soft);border-radius:10px;margin-bottom:8px}
+  .m-row .t{font-weight:600}
+  .m-row .s{font-size:11px;color:var(--muted)}
+  .m-row .open{color:var(--brass-hi);font-weight:700;font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+  .m-row .del{color:var(--red);font-size:16px;padding:4px 8px}
+  .m-empty{color:var(--muted);text-align:center;padding:22px;font-size:13px}
+
+  /* print = clean white work order */
+  #printDoc{display:none}
+  @media print{
+    @page{margin:13mm}
+    body{padding:0!important;background:#fff!important}
+    body>*{display:none!important}
+    #printDoc{display:block!important;color:#000;font-family:var(--sans)}
+  }
+  #printDoc .ph{display:flex;justify-content:space-between;border-bottom:3px solid #1C2024;padding-bottom:10px;margin-bottom:14px}
+  #printDoc .pb{font-size:24px;font-weight:800;color:#1C2024}
+  #printDoc .pb span{color:#8E6628}
+  #printDoc .pt{font-size:11px;color:#555}
+  #printDoc .pd{text-align:right;font-size:11px;color:#333}
+  #printDoc .pd .big{font-size:15px;font-weight:800;color:#8E6628}
+  #printDoc .pdoor{border:1px solid #ccc;border-radius:8px;padding:10px 12px;margin-bottom:10px;break-inside:avoid}
+  #printDoc .pdoor h3{font-size:14px;color:#1C2024;margin-bottom:6px;border-bottom:1px solid #ddd;padding-bottom:4px}
+  #printDoc .prow{display:flex;flex-wrap:wrap;gap:4px 22px;font-size:12px;color:#222}
+  #printDoc .prow div{min-width:150px}
+  #printDoc .prow b{color:#000}
+  #printDoc .pcustom{color:#b3261e;font-weight:700}
+  #printDoc .pnote{font-size:11px;color:#555;margin-top:5px}
+html[data-theme="light"]{--bg:#f4f1e9;--panel:#ffffff;--panel-2:#faf8f2;--line:#d9d2c2;--line-soft:#e6e0d2;--text:#1c2024;--parchment:#1c2024;--muted:#6b7178;--shadow:0 8px 24px rgba(0,0,0,.12)}
+</style>
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+
+<header>
+  <div class="brand" style="cursor:pointer" onclick="location.href='/index.html'"><span class="bdot"></span><span class="wm">Door <em>Spec</em></span></div>
+  <div class="hd-right">
+    <div class="sync"><span class="dot"></span><span id="syncTxt">Saved</span></div>
+    <a class="hback" href="/index.html" title="Back" onclick="if(history.length>1){history.back();return false}">&#8592;</a>
+      <button class="tnav-burger" id="tnavBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="tnav-menu" id="tnavMenu" aria-label="Go to">
+    <a href="/profile.html">My Profile</a>
+    <a href="/customers.html?new=1">Add New Customer</a>
+    <a href="/customers.html">View all customers</a>
+    <a href="/scribe.html?quick=1">Quick Estimate</a>
+    <a href="/settings.html">Settings</a>
+    <div class="tnav-div" role="separator"></div>
+    <a href="/cdn-cgi/access/logout" class="tnav-signout">Sign out</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <p class="lede">Measure on site, fill it in, save the PDF. Out-of-range numbers flag <b style="color:var(--red)">custom</b> so you know to check with admin.</p>
+
+  <!-- Job info -->
+  <div class="card">
+    <h2>Job</h2>
+    <div class="grid2">
+      <div class="fld full"><label class="fl">Customer name</label><input id="jName" placeholder="Customer name"></div>
+      <div class="fld full"><label class="fl">Address</label><input id="jAddr" placeholder="Street, city"></div>
+      <div class="fld"><label class="fl">Date</label><input id="jDate" type="date"></div>
+      <div class="fld"><label class="fl">Prepared by</label><input id="jBy" placeholder="Your name"></div>
+    </div>
+  </div>
+
+  <!-- How to measure -->
+  <div class="card">
+    <h2>How to measure <span class="idx">reference</span></h2>
+    <div class="diagram" id="diagram"></div>
+    <p class="hint" style="margin-top:12px">
+      <b style="color:var(--parchment)">Hinge side:</b> from the <b style="color:var(--parchment)">top of the door</b>, measure down to the <b style="color:var(--parchment)">top of each hinge</b>.
+      <b style="color:var(--parchment)">Strike side:</b> measure down to the <b style="color:var(--parchment)">centre of the knob/latch</b>; the <b style="color:var(--parchment)">deadbolt</b> sits 5½" above it.
+    </p>
+  </div>
+
+  <div id="doors"></div>
+  <button class="adddoor" id="addDoor">+ Add another door</button>
+
+  <!-- photos -->
+  <div class="card">
+    <h2>Photos</h2>
+    <p class="hint">Take photos for every job — upload them to the customer in <b style="color:var(--parchment)">HubSpot</b> (we don't store photos here).</p>
+    <label class="chk"><input type="checkbox" id="phBefore"> Before photos taken</label>
+    <label class="chk"><input type="checkbox" id="phAfter"> After photos taken</label>
+  </div>
+</main>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="meta"><b id="doorCount">0 doors</b><br>Door Spec / Work Order</div>
+    <button class="b-new" id="btnOpen">Open</button>
+    <button class="b-new" id="btnSave">Save</button>
+    <button class="b-pdf" id="btnPdf">PDF</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="sheet-h"><b>Your saved Door Specs</b><button id="mClose" aria-label="Close">&#10005;</button></div>
+    <button class="m-new" id="mNew">+ New blank spec</button>
+    <div id="mList"></div>
+  </div>
+</div>
+
+<div id="printDoc"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1700);}
+
+// ---- Masonite reference defaults ----
+const HINGE={ "80":["6-1/2","37-1/2","68-1/2"], "96":["6-1/2","32-1/2","58-1/2","84-1/2"] };
+const LOCK ={ "80":{knob:"45-7/8",dead:"5-1/2"}, "96":{knob:"61-7/8",dead:"5-1/2"} };
+const WIDTHS=["24","26","28","30","32","34","36"];
+
+function blankDoor(){return{loc:"",type:"Interior",config:"Prehung",hand:"LH",swing:"In",
+  width:"32",widthOther:"",height:"80",heightOther:"",thick:"1-3/8",thickOther:"",
+  hingeCount:3,hinges:HINGE["80"].slice(),corner:"Square",edge:"Wood",
+  knob:LOCK["80"].knob,dead:LOCK["80"].dead,backset:"2-3/8",
+  weatherstrip:false,sweep:false,threshold:false,brickmould:false,
+  finish:"",petdoor:false,notes:""};}
+
+let job={name:"",addr:"",date:new Date().toISOString().slice(0,10),by:"",profileId:"",profileNumber:""};
+let doors=[blankDoor()];
+let photos={before:false,after:false};
+let currentId=null;
+
+// ---- diagram ----
+function drawDiagram(){
+  $("#diagram").innerHTML=`
+  <svg viewBox="0 0 300 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="95" y="20" width="110" height="320" rx="3" stroke="#e6c47e" stroke-width="2" fill="rgba(230,196,126,.04)"/>
+    <rect x="108" y="40" width="36" height="60" stroke="#7e5e27" stroke-width="1"/><rect x="156" y="40" width="36" height="60" stroke="#7e5e27" stroke-width="1"/>
+    <rect x="108" y="115" width="36" height="95" stroke="#7e5e27" stroke-width="1"/><rect x="156" y="115" width="36" height="95" stroke="#7e5e27" stroke-width="1"/>
+    <rect x="108" y="225" width="36" height="95" stroke="#7e5e27" stroke-width="1"/><rect x="156" y="225" width="36" height="95" stroke="#7e5e27" stroke-width="1"/>
+    <!-- hinges left -->
+    <rect x="91" y="52" width="6" height="20" fill="#e6c47e"/><rect x="91" y="170" width="6" height="20" fill="#e6c47e"/><rect x="91" y="288" width="6" height="20" fill="#e6c47e"/>
+    <!-- knob + deadbolt right -->
+    <circle cx="196" cy="200" r="6" fill="none" stroke="#e6c47e" stroke-width="2"/>
+    <circle cx="196" cy="168" r="4" fill="none" stroke="#e6c47e" stroke-width="2"/>
+    <!-- dim line left -->
+    <line x1="60" y1="20" x2="60" y2="308" stroke="#969ca5" stroke-width="1"/>
+    <line x1="56" y1="20" x2="64" y2="20" stroke="#969ca5" stroke-width="1"/>
+    <line x1="56" y1="62" x2="91" y2="62" stroke="#969ca5" stroke-width="1" stroke-dasharray="3 3"/>
+    <line x1="56" y1="180" x2="91" y2="180" stroke="#969ca5" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="50" y="44" fill="#969ca5" font-size="9" text-anchor="end">top of</text>
+    <text x="50" y="54" fill="#969ca5" font-size="9" text-anchor="end">each hinge</text>
+    <!-- dim line right -->
+    <line x1="240" y1="20" x2="240" y2="200" stroke="#969ca5" stroke-width="1"/>
+    <line x1="236" y1="20" x2="244" y2="20" stroke="#969ca5" stroke-width="1"/>
+    <line x1="205" y1="200" x2="244" y2="200" stroke="#969ca5" stroke-width="1" stroke-dasharray="3 3"/>
+    <line x1="205" y1="168" x2="220" y2="168" stroke="#969ca5" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="250" y="196" fill="#e6c47e" font-size="9">lock C/L</text>
+    <text x="250" y="166" fill="#969ca5" font-size="9">deadbolt</text>
+    <text x="100" y="14" fill="#969ca5" font-size="9">TOP</text>
+  </svg>`;
+}
+
+// ---- render doors ----
+function frac(){return '"';}
+function doorCard(d,i){
+  const ht=(d.height==="other")?"other":d.height;
+  const hingeFields=d.hinges.map((h,hi)=>`
+     <div class="fld"><label class="fl">${ordinal(hi+1)} hinge — top at (in)</label>
+       <input class="num" data-i="${i}" data-f="hinge" data-h="${hi}" value="${esc(h)}"></div>`).join("");
+  return `<div class="card">
+    <h2>${d.loc?esc(d.loc):"Door "+(i+1)} <span class="idx">${doors.length>1?'<button class="rmdoor" data-i="'+i+'" data-f="rm">Remove</button>':''}</span></h2>
+
+    <div class="fld"><label class="fl">Door location / label</label><input data-i="${i}" data-f="loc" value="${esc(d.loc)}" placeholder="e.g. Front entry, Master bedroom"></div>
+
+    <div class="grid2">
+      <div><label class="fl">Type</label><div class="seg" data-seg="type" data-i="${i}"><button data-v="Interior" class="${d.type==='Interior'?'on':''}">Interior</button><button data-v="Exterior" class="${d.type==='Exterior'?'on':''}">Exterior</button></div></div>
+      <div><label class="fl">Config</label><div class="seg" data-seg="config" data-i="${i}"><button data-v="Prehung" class="${d.config==='Prehung'?'on':''}">Prehung</button><button data-v="Slab" class="${d.config==='Slab'?'on':''}">Slab</button></div></div>
+      <div style="margin-top:10px"><label class="fl">Handing</label><div class="seg" data-seg="hand" data-i="${i}"><button data-v="LH" class="${d.hand==='LH'?'on':''}">LH</button><button data-v="RH" class="${d.hand==='RH'?'on':''}">RH</button></div></div>
+      <div style="margin-top:10px"><label class="fl">Swing</label><div class="seg" data-seg="swing" data-i="${i}"><button data-v="In" class="${d.swing==='In'?'on':''}">In</button><button data-v="Out" class="${d.swing==='Out'?'on':''}">Out</button></div></div>
+    </div>
+
+    <div class="sub">Size</div>
+    <div class="grid2">
+      <div class="fld"><label class="fl">Width (in)</label><select data-i="${i}" data-f="width">${WIDTHS.map(w=>`<option ${d.width===w?'selected':''}>${w}</option>`).join("")}<option value="other" ${d.width==='other'?'selected':''}>Other…</option></select>
+        ${d.width==='other'?`<input class="num" style="margin-top:7px" data-i="${i}" data-f="widthOther" value="${esc(d.widthOther)}" placeholder="custom width">`:''}</div>
+      <div class="fld"><label class="fl">Height</label><div class="seg" data-seg="height" data-i="${i}"><button data-v="80" class="${d.height==='80'?'on':''}">6'8"</button><button data-v="96" class="${d.height==='96'?'on':''}">8'0"</button><button data-v="other" class="${d.height==='other'?'on':''}">Other</button></div>
+        ${d.height==='other'?`<input class="num" style="margin-top:7px" data-i="${i}" data-f="heightOther" value="${esc(d.heightOther)}" placeholder="custom height">`:''}</div>
+      <div class="fld full"><label class="fl">Thickness</label><div class="seg" data-seg="thick" data-i="${i}"><button data-v="1-3/8" class="${d.thick==='1-3/8'?'on':''}">1-3/8"</button><button data-v="1-3/4" class="${d.thick==='1-3/4'?'on':''}">1-3/4"</button><button data-v="other" class="${d.thick==='other'?'on':''}">Other</button></div>
+        ${d.thick==='other'?`<input class="num" style="margin-top:7px" data-i="${i}" data-f="thickOther" value="${esc(d.thickOther)}" placeholder="custom thickness">`:''}</div>
+    </div>
+
+    <div class="sub">Hinges</div>
+    <p class="hint">Defaults auto-fill from the height — adjust if the door differs.</p>
+    <div class="grid2">
+      <div><label class="fl">How many hinges</label><div class="seg" data-seg="hingeCount" data-i="${i}"><button data-v="3" class="${d.hingeCount===3?'on':''}">3</button><button data-v="4" class="${d.hingeCount===4?'on':''}">4</button></div></div>
+      <div><label class="fl">Corner</label><div class="seg" data-seg="corner" data-i="${i}"><button data-v="Square" class="${d.corner==='Square'?'on':''}">Square</button><button data-v="Radius" class="${d.corner==='Radius'?'on':''}">Radius</button></div></div>
+    </div>
+    <div class="hingerow" style="margin-top:10px">${hingeFields}</div>
+
+    <div class="sub">Lock &amp; bore</div>
+    <div class="grid2">
+      <div class="fld"><label class="fl">Lock C/L — from top (in)</label><input class="num" data-i="${i}" data-f="knob" value="${esc(d.knob)}"></div>
+      <div class="fld"><label class="fl">Deadbolt — above lock (in)</label><input class="num" data-i="${i}" data-f="dead" value="${esc(d.dead)}"></div>
+      <div class="fld"><label class="fl">Backset</label><select data-i="${i}" data-f="backset"><option ${d.backset==='2-3/8'?'selected':''}>2-3/8</option><option ${d.backset==='2-3/4'?'selected':''}>2-3/4</option><option value="5" ${d.backset==='5'?'selected':''}>5 (uncommon)</option></select></div>
+      <div class="fld"><label class="fl">Edge</label><div class="seg" data-seg="edge" data-i="${i}"><button data-v="Wood" class="${d.edge==='Wood'?'on':''}">Wood</button><button data-v="Metal" class="${d.edge==='Metal'?'on':''}">Metal</button></div></div>
+    </div>
+
+    <div class="exwrap ${d.type==='Exterior'?'on':''}">
+      <div class="sub">Exterior extras</div>
+      <label class="chk"><input type="checkbox" data-i="${i}" data-f="weatherstrip" ${d.weatherstrip?'checked':''}> Replace weatherstripping</label>
+      <label class="chk"><input type="checkbox" data-i="${i}" data-f="sweep" ${d.sweep?'checked':''}> Replace door sweep</label>
+      <label class="chk"><input type="checkbox" data-i="${i}" data-f="threshold" ${d.threshold?'checked':''}> Replace threshold</label>
+      <label class="chk"><input type="checkbox" data-i="${i}" data-f="brickmould" ${d.brickmould?'checked':''}> Brick mould / casing</label>
+    </div>
+
+    <div class="sub">Finish &amp; notes</div>
+    <div class="fld"><label class="fl">Finish / colour</label><input data-i="${i}" data-f="finish" value="${esc(d.finish)}" placeholder="e.g. primed white, stained oak"></div>
+    <label class="chk"><input type="checkbox" data-i="${i}" data-f="petdoor" ${d.petdoor?'checked':''}> Pet door / cut-out needed</label>
+    <div class="fld" style="margin-top:8px"><label class="fl">Notes</label><textarea data-i="${i}" data-f="notes" placeholder="Anything else about this door…">${esc(d.notes)}</textarea></div>
+
+    <div class="flag ${flagText(d)?'on':''}" id="flag${i}"><span class="lbl">&#9873; Custom —</span> ${flagText(d)||''} Confirm sourcing &amp; install with admin.</div>
+  </div>`;
+}
+function ordinal(n){return ["1st","2nd","3rd","4th","5th"][n-1]||n+"th";}
+function esc(s){return (""+(s==null?"":s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+// ---- flag logic ----
+function flagText(d){
+  const f=[];
+  if(d.height==="other") f.push("non-standard height");
+  if(d.width==="other") f.push("non-standard width");
+  if(d.thick==="other") f.push("non-standard thickness");
+  if(d.type==="Interior" && d.thick==="1-3/4") f.push("thick slab for interior");
+  if(d.type==="Exterior" && d.thick==="1-3/8") f.push("thin slab for exterior");
+  if(d.backset==="5") f.push("5\" backset (verify sourcing)");
+  return f.length?f.join(", ")+".":"";
+}
+
+function render(){
+  $("#doors").innerHTML=doors.map(doorCard).join("");
+  $("#doorCount").textContent=doors.length+(doors.length===1?" door":" doors");
+  $("#jName").value=job.name;$("#jAddr").value=job.addr;$("#jDate").value=job.date;$("#jBy").value=job.by;
+  $("#phBefore").checked=photos.before;$("#phAfter").checked=photos.after;
+  save();
+}
+
+// apply height defaults
+function applyHeight(d){
+  if(d.height==="80"||d.height==="96"){
+    d.hingeCount=HINGE[d.height].length;
+    d.hinges=HINGE[d.height].slice();
+    d.knob=LOCK[d.height].knob;d.dead=LOCK[d.height].dead;
+  }
+}
+
+// ---- events ----
+document.addEventListener("click",e=>{
+  const seg=e.target.closest(".seg button");
+  if(seg){const box=seg.closest(".seg");const f=box.dataset.seg,i=+box.dataset.i,v=seg.dataset.v;
+    if(f==="hingeCount"){doors[i].hingeCount=+v; const base=(+v===4)?HINGE["96"]:HINGE["80"]; doors[i].hinges=base.slice(0,+v);}
+    else {doors[i][f]=v; if(f==="height") applyHeight(doors[i]);}
+    render();return;}
+  const rm=e.target.closest('[data-f="rm"]');
+  if(rm){doors.splice(+rm.dataset.i,1);render();return;}
+});
+document.addEventListener("input",e=>{
+  const t=e.target;
+  if(t.id==="jName"){job.name=t.value;save();return;}
+  if(t.id==="jAddr"){job.addr=t.value;save();return;}
+  if(t.id==="jDate"){job.date=t.value;save();return;}
+  if(t.id==="jBy"){job.by=t.value;save();return;}
+  if(t.id==="phBefore"){photos.before=t.checked;save();return;}
+  if(t.id==="phAfter"){photos.after=t.checked;save();return;}
+  const i=t.dataset.i; if(i==null)return; const d=doors[+i]; const f=t.dataset.f;
+  if(f==="hinge"){d.hinges[+t.dataset.h]=t.value;save();return;}
+  if(t.type==="checkbox"){d[f]=t.checked;save();return;}
+  d[f]=t.value;
+  // live re-flag without full re-render (keep focus) for text fields
+  if(["loc","knob","dead","finish","notes","widthOther","heightOther","thickOther"].includes(f)){
+    const fl=$("#flag"+i); if(fl){const txt=flagText(d); fl.classList.toggle("on",!!txt); if(txt) fl.innerHTML='<span class="lbl">&#9873; Custom —</span> '+txt+' Confirm sourcing &amp; install with admin.';}
+    save();return;
+  }
+  save();
+});
+document.addEventListener("change",e=>{
+  const t=e.target; const i=t.dataset.i; if(i==null)return; const f=t.dataset.f;
+  if(f==="width"||f==="thick"||f==="backset"){doors[+i][f]=t.value;render();}
+});
+
+$("#addDoor").addEventListener("click",()=>{doors.push(blankDoor());render();toast("Door added");});
+$("#btnSave").addEventListener("click",saveCloud);
+$("#btnOpen").addEventListener("click",openModal);
+$("#mClose").addEventListener("click",()=>$("#modal").classList.remove("on"));
+$("#mNew").addEventListener("click",()=>{if(confirm("Start a new blank spec?"))newSpec();});
+$("#modal").addEventListener("click",e=>{if(e.target.id==="modal")$("#modal").classList.remove("on");});
+$("#mList").addEventListener("click",e=>{
+  const o=e.target.closest("[data-open]"); if(o){loadId(o.dataset.open);return;}
+  const d=e.target.closest("[data-del]"); if(d&&confirm("Delete this saved spec?")){fetch("/api/jobs?id="+encodeURIComponent(d.dataset.del),{method:"DELETE"}).then(openModal);}
+});
+$("#btnPdf").addEventListener("click",buildPrint);
+
+// ---- save / load (local autosave; cloud is explicit) ----
+function setSync(t){const e=$("#syncTxt");if(e)e.textContent=t;}
+function save(){try{localStorage.setItem("doorspec:current",JSON.stringify({job,doors,photos,currentId}));setSync("Saved locally");}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem("doorspec:current"));if(s&&s.doors){job=s.job||job;doors=s.doors;photos=s.photos||photos;currentId=s.currentId||null;}}catch(e){}}
+
+// ---- cloud (Cloudflare KV via /api/jobs) ----
+function jobTitle(){return job.name||(doors[0]&&doors[0].loc)||"Untitled spec";}
+async function saveCloud(){
+  setSync("Saving…");
+  try{
+    const r=await fetch("/api/jobs",{method:"PUT",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({id:currentId,kind:"workorder",title:jobTitle(),
+        customer:{name:job.name,address:job.addr},payload:{job,doors,photos},
+        profileId:job.profileId||"",profileNumber:job.profileNumber||"",
+        doorsCount:doors.length,createdByName:job.by,status:"draft"})});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    const d=await r.json(); currentId=d.id; save(); setSync("Saved to cloud"); toast("Saved to cloud");
+  }catch(e){setSync("Saved locally"); toast("Cloud save failed — kept on this device");}
+}
+async function openModal(){
+  $("#mList").innerHTML='<div class="m-empty">Loading…</div>';
+  $("#modal").classList.add("on");
+  try{
+    const r=await fetch("/api/jobs?mine=1&kind=workorder");
+    const items=await r.json();
+    if(!Array.isArray(items)||!items.length){$("#mList").innerHTML='<div class="m-empty">No saved specs yet. Fill one in and tap Save.</div>';return;}
+    $("#mList").innerHTML=items.map(it=>{
+      const dt=it.updatedAt?new Date(it.updatedAt).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"";
+      return `<div class="m-row"><div><div class="t">${esc(it.title||"Untitled")}</div>
+        <div class="s">${it.doorsCount||0} door${(it.doorsCount===1)?"":"s"} · ${dt}</div></div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="open" data-open="${esc(it.id)}">Open</button>
+          <button class="del" data-del="${esc(it.id)}" aria-label="Delete">&#128465;</button>
+        </div></div>`;
+    }).join("");
+  }catch(e){$("#mList").innerHTML='<div class="m-empty">Couldn\u2019t load saved specs (are you online / deployed?).</div>';}
+}
+async function loadId(id){
+  try{
+    const r=await fetch("/api/jobs?id="+encodeURIComponent(id));
+    const rec=await r.json();
+    if(rec&&rec.payload){job=rec.payload.job||job;doors=(rec.payload.doors&&rec.payload.doors.length)?rec.payload.doors:[blankDoor()];photos=rec.payload.photos||photos;currentId=rec.id;render();$("#modal").classList.remove("on");setSync("Opened from cloud");toast("Opened");}
+  }catch(e){toast("Couldn't open that spec");}
+}
+function newSpec(){job={name:"",addr:"",date:new Date().toISOString().slice(0,10),by:""};doors=[blankDoor()];photos={before:false,after:false};currentId=null;render();$("#modal").classList.remove("on");toast("New spec");}
+
+// ---- print / PDF ----
+function dim(v){return v?esc(v)+'"':"—";}
+function buildPrint(){
+  const rows=doors.map((d,i)=>{
+    const w=d.width==="other"?d.widthOther:d.width;
+    const h=d.height==="other"?d.heightOther:(d.height==="80"?"6'8\"":"8'0\"");
+    const th=d.thick==="other"?d.thickOther:d.thick;
+    const flag=flagText(d);
+    return `<div class="pdoor"><h3>${i+1}. ${esc(d.loc||"Door "+(i+1))} — ${esc(d.type)} ${esc(d.config)}</h3>
+      <div class="prow">
+        <div><b>Size:</b> ${dim(w)} × ${h} × ${dim(th)}</div>
+        <div><b>Handing:</b> ${esc(d.hand)}, swing ${esc(d.swing)}</div>
+        <div><b>Hinges:</b> ${d.hingeCount} (${esc(d.corner)} corner, ${esc(d.edge)} edge)</div>
+        <div><b>Hinge tops:</b> ${d.hinges.map(esc).join('", ')}"</div>
+        <div><b>Lock C/L:</b> ${esc(d.knob)}" from top</div>
+        <div><b>Deadbolt:</b> ${esc(d.dead)}" above lock</div>
+        <div><b>Backset:</b> ${esc(d.backset)}"</div>
+        ${d.finish?`<div><b>Finish:</b> ${esc(d.finish)}</div>`:""}
+        ${d.type==='Exterior'?`<div><b>Exterior:</b> ${[d.weatherstrip&&'weatherstrip',d.sweep&&'sweep',d.threshold&&'threshold',d.brickmould&&'brick mould'].filter(Boolean).join(', ')||'—'}</div>`:""}
+        ${d.petdoor?`<div><b>Pet door / cut-out</b></div>`:""}
+      </div>
+      ${flag?`<div class="pnote pcustom">&#9873; CUSTOM: ${flag}</div>`:""}
+      ${d.notes?`<div class="pnote">Notes: ${esc(d.notes)}</div>`:""}
+    </div>`;
+  }).join("");
+  $("#printDoc").innerHTML=`
+    <div class="ph"><div><div class="pb">TheDoorPro<span>.</span></div><div class="pt">Door Spec / Work Order · The gold standard in door installation</div></div>
+      <div class="pd"><div class="big">DOOR SPEC</div><div>${esc(job.date)}</div>${job.by?`<div>By: ${esc(job.by)}</div>`:""}</div></div>
+    <div class="prow" style="margin-bottom:14px;font-size:13px"><div><b>Customer:</b> ${esc(job.name||"—")}</div><div><b>Address:</b> ${esc(job.addr||"—")}</div></div>
+    ${rows}
+    <div class="pnote" style="margin-top:10px">Photos: ${photos.before?'before ✓':'before —'} · ${photos.after?'after ✓':'after —'} (stored in HubSpot)</div>`;
+  setTimeout(()=>window.print(),60);
+}
+
+// ---- burger ----
+(function(){var b=$("#tnavBtn"),m=$("#tnavMenu");
+  function c(){m.classList.remove("open");b.setAttribute("aria-expanded","false");}
+  b.addEventListener("click",e=>{e.stopPropagation();var o=m.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});
+  document.addEventListener("click",e=>{if(!m.contains(e.target)&&!b.contains(e.target))c();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")c();});
+})();
+
+// ---- init ----
+load();drawDiagram();render();
+(function(){const id=new URLSearchParams(location.search).get("id");if(id){loadId(id);return;}
+  const q=new URLSearchParams(location.search);const pid=q.get("pid");
+  if(pid){newSpec();job.profileId=pid;job.profileNumber=q.get("pnum")||"";
+    job.name=q.get("cust")||"";job.addr=q.get("addr")||"";
+    render();toast("New door spec for "+(job.name||"customer"));}
+})();
+</script>
+<script>
+/* consistent role-gate: hide admin-only menu items for employees */
+fetch('/api/me',{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(d){
+  var admin=(d&&(d.role==='admin'||d.role==='super'));
+  if(!admin){Array.prototype.forEach.call(document.querySelectorAll('[data-role-min="admin"]'),function(e){e.style.display='none';});}
+}).catch(function(){});
+</script>
+</body>
+</html>

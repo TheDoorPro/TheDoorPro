@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#15181c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Hinge">
+<script>try{var t=localStorage.getItem('hinge-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<meta name="robots" content="noindex, nofollow">
+<title>Customers — TheDoorPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15181c; --panel:#20262c; --panel-2:#262d35; --field:#11161a;
+    --brass:#b5893f; --brass-hi:#e6c47e; --brass-deep:#7e5e27;
+    --text:#e8e2d5; --parchment:#ece4d4; --muted:#969ca5; --green:#43b888; --red:#e06a5b;
+    --line:rgba(230,196,126,.16); --line-soft:rgba(255,255,255,.08);
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:radial-gradient(1100px 560px at 50% -14%,#20262d 0%,rgba(32,38,45,0) 60%),var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.45;padding-bottom:60px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,select,textarea{font-family:inherit;font-size:15px;color:var(--text);width:100%;background:var(--field);border:1px solid var(--line-soft);border-radius:9px;padding:10px 11px}
+  input:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--brass-hi);outline-offset:1px}
+  .num{font-family:var(--mono)}
+
+  header{background:linear-gradient(180deg,#1b1f24,#15181c);border-bottom:1px solid var(--line-soft);padding:13px 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:9px}
+  .bdot{width:9px;height:9px;border-radius:50%;background:linear-gradient(180deg,var(--brass-hi),var(--brass-deep));box-shadow:0 0 0 3px rgba(230,196,126,.1)}
+  .wm{font-family:"Fraunces",serif;font-weight:600;font-size:21px;color:var(--parchment)}
+  .wm em{font-style:italic;color:var(--brass-hi)}
+  .hd-right{display:flex;align-items:center;gap:12px}
+  .tnav-so{color:var(--muted);text-decoration:none;font-size:12.5px;border:1px solid var(--line-soft);padding:7px 12px;border-radius:9px}
+  .tnav-burger{width:42px;height:38px;border:1px solid var(--line-soft);border-radius:9px;background:rgba(255,255,255,.02);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  .tnav-burger span{display:block;width:18px;height:2px;border-radius:2px;background:var(--brass-hi);transition:.22s}
+  .tnav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .tnav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .tnav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  .tnav-menu{position:fixed;top:60px;right:16px;width:230px;z-index:300;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -22px rgba(0,0,0,.8);padding:8px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:.2s}
+  .tnav-menu.open{opacity:1;visibility:visible;transform:translateY(0)}
+  .tnav-menu a{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:9px;text-decoration:none;color:var(--parchment);font-size:14px;font-weight:500}
+  .tnav-menu a:hover{background:rgba(230,196,126,.08)}
+  .tnav-tag{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:3px 8px;border-radius:14px;color:#11141a;background:linear-gradient(180deg,var(--brass-hi),var(--brass))}
+
+  main{padding-top:20px}
+  h1{font-family:"Fraunces",serif;font-weight:600;font-size:23px;color:var(--parchment);margin-bottom:3px}
+  h1 em{font-style:italic;color:var(--brass-hi)}
+  .lede{color:var(--muted);font-size:13px;margin-bottom:16px}
+
+  .searchbar{display:flex;gap:8px;margin-bottom:14px}
+  .searchbar input{flex:1}
+  .btn{border-radius:10px;font-weight:700;font-size:13px;padding:11px 15px;white-space:nowrap}
+  .btn-gold{background:linear-gradient(180deg,var(--brass-hi),var(--brass));color:#15110a}
+  .btn-ghost{background:var(--panel-2);border:1px solid var(--line-soft);color:var(--text)}
+  .btn-red{background:rgba(224,106,91,.12);border:1px solid rgba(224,106,91,.4);color:#f0a89f}
+
+  .card{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line-soft);border-radius:14px;padding:14px 15px;margin-bottom:10px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer}
+  .row .nm{font-weight:600}
+  .row .meta{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .row .no{font-family:var(--mono);font-size:11px;color:var(--brass-hi)}
+  .pill{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:3px 9px;border-radius:14px}
+  .pill.active{color:var(--green);background:rgba(67,184,136,.13);border:1px solid rgba(67,184,136,.3)}
+  .pill.archived{color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--line-soft)}
+  .empty{color:var(--muted);text-align:center;padding:30px 10px;font-size:13.5px}
+
+  .fl{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+  .fld{margin-bottom:11px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px 12px}
+  .full{grid-column:1/-1}
+
+  .ehead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+  .ehead .no{font-family:var(--mono);font-size:13px;color:var(--brass-hi)}
+  .verify{background:rgba(230,196,126,.06);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--muted);margin-bottom:14px}
+  .verify b{color:var(--parchment)}
+
+  .sub{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--brass-hi);font-weight:700;margin:18px 0 9px;border-bottom:1px solid var(--line-soft);padding-bottom:6px}
+  .log{list-style:none;font-size:12.5px}
+  .log li{padding:8px 0;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:10px}
+  .log .act{color:var(--text)} .log .by{color:var(--muted);font-size:11px;text-align:right;white-space:nowrap}
+  .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:var(--panel-2);color:var(--text);border:1px solid var(--line);padding:10px 18px;border-radius:24px;font-size:13px;font-weight:600;z-index:400;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.on{opacity:1}
+  .hide{display:none!important}
+html[data-theme="light"]{--bg:#f4f1e9;--panel:#ffffff;--panel-2:#faf8f2;--line:#d9d2c2;--line-soft:#e6e0d2;--text:#1c2024;--parchment:#1c2024;--muted:#6b7178;--shadow:0 8px 24px rgba(0,0,0,.12)}
+  .tnav-div{height:1px;background:var(--line-soft);margin:6px 8px}
+  .tnav-signout{color:var(--muted)}
+ .row .rmain{min-width:0}
+  .row .nm{font-weight:700}
+  .row .meta{font-size:12.5px;color:var(--muted);margin-top:2px;word-break:break-word}
+  .row .rside{text-align:right;flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px;margin-left:10px}
+  .row .no{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+  .pill{font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;padding:3px 8px;border-radius:10px}
+  .pill.completed{color:#11141a;background:linear-gradient(180deg,var(--brass-hi),var(--brass))}
+  .pill.deleted{color:#fff;background:#9a3b32}
+  .btn:disabled,.btn.disabled{opacity:.4;cursor:default;pointer-events:none}
+  .log li.hasdet{cursor:pointer}
+  .log .more{color:var(--brass);font-size:11px;font-weight:700;margin-left:6px;text-decoration:underline}
+  .mscrim{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
+  .mscrim.on{display:flex}
+  .mbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;max-width:420px;width:100%;box-shadow:var(--shadow)}
+  .mbox h3{font-family:"Fraunces",Georgia,serif;margin:0 0 8px;font-size:20px}
+  .mbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+  .spill{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:800;padding:3px 9px;border-radius:11px;display:none}
+  .spill.active{display:inline-block;color:#11331f;background:#bfe7cd}
+  .spill.completed{display:inline-block;color:#11141a;background:linear-gradient(180deg,#e6c47e,#b5893f)}
+  .spill.deleted{display:inline-block;color:#fff;background:#7c8085}
+  .spill.pending{display:inline-block;color:#3a2a00;background:#f0d693}
+</style>
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<header>
+  <div class="brand" style="cursor:pointer" onclick="location.href='/index.html'"><span class="bdot"></span><span class="wm">Customers</span></div>
+  <div class="hd-right">
+    <a class="hback" href="/index.html" title="Back" onclick="if(history.length>1){history.back();return false}">&#8592;</a>
+      <button class="tnav-burger" id="tnavBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="tnav-menu" id="tnavMenu" aria-label="Go to">
+    <a href="/profile.html">My Profile</a>
+    <a href="/customers.html?new=1">Add New Customer</a>
+    <a href="/customers.html">View all customers</a>
+    <a href="/scribe.html?quick=1">Quick Estimate</a>
+    <a href="/settings.html">Settings</a>
+    <div class="tnav-div" role="separator"></div>
+    <a href="/cdn-cgi/access/logout" class="tnav-signout">Sign out</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <!-- LIST VIEW -->
+  <section id="listView">
+    <h1>Customer <em>files</em></h1>
+    <p class="lede">Search by name or phone to pull up a file.</p>
+    <div class="searchbar">
+      <input id="q" placeholder="Search name or phone…" autocomplete="off">
+      <button class="btn btn-gold" id="newBtn">+ New</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin:-4px 0 12px;font-size:13px;color:var(--muted)">
+      <span>Showing:</span>
+      <select id="viewSel" style="width:auto;padding:8px 10px;border-radius:8px"></select>
+    </div>
+    <div id="list"></div>
+  </section>
+
+  <!-- EDITOR VIEW -->
+  <section id="editView" class="hide">
+    <div class="ehead"><h1 id="eTitle">New customer</h1><span class="spill" id="eStatus"></span><span class="no" id="eNo"></span></div>
+
+    <div class="grid2">
+      <div class="fld"><label class="fl">First name</label><input id="fFirst" placeholder="First" autocomplete="off"></div>
+      <div class="fld"><label class="fl">Last name</label><input id="fLast" placeholder="LAST" autocomplete="off"></div>
+      <div class="fld"><label class="fl">Phone</label><input id="fPhone" placeholder="(403) 000-0000"></div>
+      <div class="fld"><label class="fl">Email</label><input id="fEmail" placeholder="name@email.com"></div>
+      <div class="fld full"><label class="fl">Street address</label><input id="fStreet" placeholder="123 Main St"></div>
+      <div class="fld"><label class="fl">City</label><input id="fCity" placeholder="Calgary"></div>
+      <div class="fld"><label class="fl">Province</label><select id="fProv"><option>AB</option><option>BC</option><option>SK</option><option>MB</option><option>ON</option><option>QC</option><option>NB</option><option>NS</option><option>PE</option><option>NL</option><option>YT</option><option>NT</option><option>NU</option></select></div>
+      <div class="fld"><label class="fl">Postal code</label><input id="fPostal" placeholder="T2X 0X0"></div>
+      <div class="fld full"><label class="fl">Internal notes <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">· never shown to the customer</span></label><textarea id="fNotes" style="min-height:70px" placeholder="e.g. has a dog · evenings only · gate code 1234"></textarea></div>
+    </div>
+
+    <div class="sub">This customer's work</div>
+    <div id="toolRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn btn-gold" id="newEstBtn">+ New estimate</button>
+      <button class="btn btn-gold" id="newSpecBtn">+ New door spec</button>
+    </div>
+    <div id="attached"></div>
+
+    <div class="sub">Activity log</div>
+    <ul class="log" id="log"><li><span class="act" style="color:var(--muted)">No activity yet.</span></li></ul>
+
+    <div class="actions">
+      <button class="btn btn-gold" id="saveBtn">Save</button>
+      <button class="btn btn-ghost" id="allCustBtn">All customers</button>
+      <button class="btn btn-ghost" id="completeBtn">Mark completed</button>
+      <button class="btn btn-red" id="deleteBtn">Delete</button>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div class="mscrim" id="delScrim">
+  <div class="mbox">
+    <h3 id="delTitle">Delete this customer?</h3>
+    <p class="lede" id="delText" style="margin:0 0 10px">Are you sure you want to delete this customer? Please explain why.</p>
+    <textarea id="delReason" placeholder="Reason (required) — e.g. duplicate, created by mistake" style="min-height:70px"></textarea>
+    <div class="mbtns"><button class="btn btn-ghost" id="delCancel">Cancel</button><button class="btn btn-red" id="delConfirm">Delete file</button></div>
+  </div>
+</div>
+
+<div class="mscrim" id="actScrim">
+  <div class="mbox">
+    <h3 id="actTitle">Change details</h3>
+    <div id="actBody" class="lede" style="white-space:pre-wrap;margin:0 0 12px"></div>
+    <div class="mbtns"><button class="btn btn-gold" id="actClose">Close</button></div>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1700);}
+function esc(s){return (""+(s==null?"":s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function fmtTs(ts){try{return new Date(ts).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});}catch(e){return"";}}
+
+let current=null;       // the profile being edited (object) or null for new
+let searchT;
+const FIELD_IDS=["fFirst","fLast","fPhone","fEmail","fStreet","fCity","fProv","fPostal","fNotes"];
+let snapshot="";
+let isAdmin=false, canSeeAll=false, myRole="employee";
+
+// ---- formatting + validation ----
+function titleCase(s){return (s||"").toLowerCase().replace(/\b([a-z])/g,m=>m.toUpperCase());}
+function fmtPhone(s){var d=(s||"").replace(/\D/g,"");if(d.length===11&&d[0]==="1")d=d.slice(1);if(d.length===10)return "("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6);return (s||"").trim();}
+function fmtPostal(s){var v=(s||"").toUpperCase().replace(/\s+/g,"");if(/^[A-Z]\d[A-Z]\d[A-Z]\d$/.test(v))return v.slice(0,3)+" "+v.slice(3);return (s||"").toUpperCase().trim();}
+function validPhone(s){return (s||"").replace(/\D/g,"").replace(/^1/,"").length===10;}
+function validPostal(s){return /^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/.test((s||"").toUpperCase().trim());}
+function validEmail(s){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((s||"").trim());}
+function autoFormat(){
+  $("#fFirst").value=titleCase($("#fFirst").value.trim());
+  $("#fLast").value=$("#fLast").value.trim().toUpperCase();
+  if($("#fPhone").value.trim())$("#fPhone").value=fmtPhone($("#fPhone").value);
+  if($("#fPostal").value.trim())$("#fPostal").value=fmtPostal($("#fPostal").value);
+}
+function validate(){
+  autoFormat();
+  const errs=[];
+  if(!$("#fFirst").value.trim()&&!$("#fLast").value.trim())errs.push("a name");
+  if(!validPhone($("#fPhone").value))errs.push("a valid phone number");
+  if($("#fEmail").value.trim()&&!validEmail($("#fEmail").value))errs.push("a valid email");
+  if($("#fPostal").value.trim()&&!validPostal($("#fPostal").value))errs.push("a valid postal code");
+  return errs;
+}
+
+// ---- dirty tracking (Save disabled until something changes) ----
+function formState(){return JSON.stringify(FIELD_IDS.map(id=>{var el=document.getElementById(id);return el?el.value:"";}));}
+function updateDirty(){var b=$("#saveBtn");if(!b)return;var dirty=(formState()!==snapshot);b.disabled=!dirty;b.classList.toggle("disabled",!dirty);}
+function markClean(){snapshot=formState();updateDirty();}
+FIELD_IDS.forEach(id=>{document.addEventListener("input",e=>{if(e.target&&e.target.id===id)updateDirty();});});
+["fFirst","fLast","fPhone","fPostal"].forEach(id=>{document.addEventListener("blur",e=>{if(e.target&&e.target.id===id){autoFormat();updateDirty();}},true);});
+
+// ---- list / search ----
+async function loadList(q){
+  const box=$("#list");box.innerHTML='<div class="empty">Loading…</div>';
+  const params=[];if(q)params.push("q="+encodeURIComponent(q));
+  var v=($("#viewSel")&&$("#viewSel").value)||(canSeeAll?"active_all":"active_mine");
+  var scope="all",statuses=["active"];
+  if(v==="active_mine"){scope="mine";statuses=["active"];}
+  else if(v==="completed"){scope=canSeeAll?"all":"mine";statuses=["completed"];}
+  else if(v==="deleted"){scope="all";statuses=["deleted"];}
+  if(!canSeeAll&&scope==="all")scope="mine";
+  params.push("statuses="+statuses.join(","));
+  params.push("scope="+scope);
+  try{
+    const r=await fetch("/api/profiles"+(params.length?("?"+params.join("&")):""));
+    const items=await r.json();
+    if(!Array.isArray(items)||!items.length){box.innerHTML='<div class="empty">'+(q?"No matches.":"No customer files yet. Tap + New to create one.")+'</div>';return;}
+    box.innerHTML=items.map(it=>{
+      const st=(it.status||"active");
+      const nm=((it.first||"")+" "+(it.last||"")).trim()||it.name||"(no name)";
+      const addr=[it.street,it.city,it.prov,it.postal].filter(Boolean).join(", ");
+      return '<div class="card"><div class="row" data-open="'+esc(it.id)+'">'+
+        '<div class="rmain">'+
+          '<div class="nm">'+esc(nm)+'</div>'+
+          (addr?'<div class="meta">'+esc(addr)+'</div>':'')+
+          '<div class="meta">'+esc(it.phone||"")+(it.email?(' · '+esc(it.email)):'')+'</div>'+
+        '</div>'+
+        '<div class="rside"><div class="no">'+esc(it.number||"")+'</div>'+(st!=="active"?'<span class="pill '+st+'">'+st+'</span>':'')+'</div>'+
+      '</div></div>';
+    }).join("");
+  }catch(e){box.innerHTML='<div class="empty">Couldn\u2019t load (are you online / deployed?).</div>';}
+}
+$("#q").addEventListener("input",e=>{clearTimeout(searchT);const v=e.target.value.trim();searchT=setTimeout(()=>loadList(v),250);});
+$("#viewSel").addEventListener("change",()=>{
+  var v=$("#viewSel").value;
+  if(v==="active_all"||v==="active_mine"){try{fetch("/api/prefs",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({listView:(v==="active_mine"?"mine":"all")})});}catch(e){}}
+  loadList($("#q").value.trim());
+});
+$("#list").addEventListener("click",e=>{const o=e.target.closest("[data-open]");if(o)openProfile(o.dataset.open);});
+
+// ---- views ----
+function showList(){$("#editView").classList.add("hide");$("#listView").classList.remove("hide");loadList($("#q").value.trim());window.scrollTo(0,0);}
+function showEdit(){$("#listView").classList.add("hide");$("#editView").classList.remove("hide");window.scrollTo(0,0);}
+
+function fillForm(p){
+  current=p||null;
+  const a=(p&&p.addr)||{};
+  let pf=p?(p.first||""):"", pl=p?(p.last||""):"";
+  if(p&&!pf&&!pl&&p.name){const parts=p.name.trim().split(/\s+/);if(parts.length>1){pl=parts.pop();pf=parts.join(" ");}else{pf=p.name;}}
+  $("#fFirst").value=pf;
+  $("#fLast").value=pl;
+  $("#fPhone").value=p?(p.phone||""):"";
+  $("#fEmail").value=p?(p.email||""):"";
+  $("#fStreet").value=a.street||"";
+  $("#fCity").value=a.city||(p?"":"Calgary");
+  $("#fProv").value=a.prov||"AB";
+  $("#fPostal").value=a.postal||"";
+  $("#fNotes").value=p?(p.notes||""):"";
+  $("#eTitle").textContent=p?(((p.first||"")+" "+(p.last||"")).trim()||p.name||"Customer file"):"New customer";
+  $("#eNo").textContent=p?(p.number?("Customer # "+p.number):""):"";
+  var _st=p?(p.status||"active"):"";
+  var _sp=$("#eStatus");_sp.className="spill"+(_st?(" "+_st):"");_sp.textContent=_st?_st:"";
+  // activity
+  window.__activity=p?(p.activity||[]):[];
+  const log=$("#log");
+  if(p&&p.activity&&p.activity.length){
+    log.innerHTML=p.activity.map((a2,i)=>'<li'+(a2.details?' class="hasdet" data-det="'+i+'"':'')+'><span class="act">'+esc(a2.action)+(a2.details?' <span class="more">view</span>':'')+'</span><span class="by">'+esc((a2.user||"").split("@")[0])+'<br>'+fmtTs(a2.ts)+'</span></li>').join("");
+  }else log.innerHTML='<li><span class="act" style="color:var(--muted)">No activity yet.</span></li>';
+  // lifecycle button labels / visibility
+  var _st2=(p&&p.status)||"active";
+  if(_st2==="deleted"&&canSeeAll){$("#completeBtn").textContent="Restore";$("#deleteBtn").textContent="Delete permanently";}
+  else{$("#completeBtn").textContent=(_st2==="completed")?"Reopen":"Mark completed";$("#deleteBtn").textContent=(canSeeAll?"Delete":"Request delete");}
+  $("#completeBtn").classList.toggle("hide",!p);
+  $("#deleteBtn").classList.toggle("hide",!p);
+  loadAttached(p?p.id:null);
+  markClean();
+}
+$("#log").addEventListener("click",e=>{
+  const li=e.target.closest("[data-det]");if(!li)return;
+  const a2=(window.__activity||[])[+li.getAttribute("data-det")];if(!a2||!a2.details)return;
+  $("#actTitle").textContent=a2.action+" · "+(((a2.user||"").split("@")[0])||"")+" · "+fmtTs(a2.ts);
+  $("#actBody").textContent=a2.details;
+  $("#actScrim").classList.add("on");
+});
+$("#actClose").addEventListener("click",()=>$("#actScrim").classList.remove("on"));
+
+async function loadAttached(id){
+  const box=$("#attached");if(!box)return;
+  if(!id){box.innerHTML='<div class="lede" style="margin:0 0 4px">Save the file first, then add an estimate or spec.</div>';return;}
+  box.innerHTML='<div class="lede" style="margin:0 0 4px">Loading…</div>';
+  try{
+    const r=await fetch("/api/jobs?profileId="+encodeURIComponent(id));
+    const items=await r.json();
+    if(!Array.isArray(items)||!items.length){box.innerHTML='<div class="lede" style="margin:0 0 4px">No estimates or specs yet.</div>';return;}
+    box.innerHTML=items.map(it=>{
+      const isEst=it.kind==="estimate";
+      const href=(isEst?"/scribe.html?id=":"/doorspec.html?id=")+encodeURIComponent(it.id);
+      const sub=isEst?("$"+Number(it.total||0).toLocaleString("en-CA",{minimumFractionDigits:2,maximumFractionDigits:2}))
+                     :((it.doorsCount||0)+" door"+(it.doorsCount===1?"":"s"));
+      const dt=it.updatedAt?new Date(it.updatedAt).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"";
+      return '<a href="'+href+'" class="card" style="display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:var(--text)">'+
+        '<div><div style="font-weight:600">'+(isEst?"Estimate":"Door spec")+' — '+esc(it.title||"")+'</div>'+
+        '<div style="font-size:11px;color:var(--muted)">'+sub+' · '+dt+'</div></div>'+
+        '<span style="color:var(--brass-hi);font-weight:700;font-size:13px">Open &#8594;</span></a>';
+    }).join("");
+  }catch(e){box.innerHTML='<div class="lede" style="margin:0 0 4px">Couldn\u2019t load attached work.</div>';}
+}
+async function handoff(tool){
+  if(!current||!current.id){const ok=await save("Created profile",{noRedirect:true});if(!ok)return;}
+  const p=current;const a=p.addr||{};
+  const base={pid:p.id,pnum:p.number||"",cust:p.name||"",phone:p.phone||"",email:p.email||""};
+  if(tool==="scribe"){
+    const q=new URLSearchParams(Object.assign(base,{addr:a.street||"",city:a.city||"",prov:a.prov||"",postal:a.postal||""}));
+    location.href="/scribe.html?"+q.toString();
+  }else{
+    const addr=[a.street,a.city,a.postal].filter(Boolean).join(", ");
+    const q=new URLSearchParams(Object.assign(base,{addr}));
+    location.href="/doorspec.html?"+q.toString();
+  }
+}
+async function openProfile(id){
+  try{const r=await fetch("/api/profiles?id="+encodeURIComponent(id));const p=await r.json();if(p){fillForm(p);showEdit();}}
+  catch(e){toast("Couldn't open file");}
+}
+$("#newBtn").addEventListener("click",()=>{fillForm(null);showEdit();});
+$("#newEstBtn").addEventListener("click",()=>handoff("scribe"));
+$("#newSpecBtn").addEventListener("click",()=>handoff("doorspec"));
+$("#allCustBtn").addEventListener("click",showList);
+
+// ---- save (with validation + change history) ----
+function gather(action,extra){
+  const first=$("#fFirst").value.trim(), last=$("#fLast").value.trim();
+  const name=(first+" "+last).trim();
+  return Object.assign({id:current?current.id:undefined,action,name,first,last,
+    phone:$("#fPhone").value.trim(),email:$("#fEmail").value.trim(),notes:$("#fNotes").value,
+    addr:{street:$("#fStreet").value.trim(),city:$("#fCity").value.trim(),prov:$("#fProv").value,postal:$("#fPostal").value.trim()}},extra||{});
+}
+function diffChanges(o){
+  const labels={first:"First name",last:"Last name",phone:"Phone",email:"Email",notes:"Internal notes",street:"Street",city:"City",prov:"Province",postal:"Postal code"};
+  o=o||{};const oa=o.addr||{};
+  const cur={first:$("#fFirst").value.trim(),last:$("#fLast").value.trim(),phone:$("#fPhone").value.trim(),email:$("#fEmail").value.trim(),notes:($("#fNotes").value||"").trim(),street:$("#fStreet").value.trim(),city:$("#fCity").value.trim(),prov:$("#fProv").value,postal:$("#fPostal").value.trim()};
+  const old={first:o.first||"",last:o.last||"",phone:o.phone||"",email:o.email||"",notes:(o.notes||"").trim(),street:oa.street||"",city:oa.city||"",prov:oa.prov||"",postal:oa.postal||""};
+  const ch=[];Object.keys(cur).forEach(k=>{if((cur[k]||"")!==(old[k]||""))ch.push(labels[k]+": "+(old[k]||"—")+" → "+(cur[k]||"—"));});
+  return ch;
+}
+function flashSaved(){toast("Customer saved ✓");}
+async function save(forcedAction,opts){
+  opts=opts||{};
+  const errs=validate();
+  if(errs.length){toast("Please add "+errs.join(", "));return null;}
+  const isNew=!(current&&current.id);
+  const changes=isNew?null:diffChanges(current);
+  if(!isNew&&changes&&changes.length===0&&!forcedAction){toast("Nothing changed");return current;}
+  const extra={};
+  if(!isNew&&changes&&changes.length)extra.details=changes.join("\n");
+  const body=gather(forcedAction||(isNew?"Created profile":"Updated details"),extra);
+  try{
+    const r=await fetch("/api/profiles",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(!r.ok)throw 0;const d=await r.json();
+    const rr=await fetch("/api/profiles?id="+encodeURIComponent(d.id));const rec=await rr.json();current=rec;
+    if(isNew){
+      var pend=null;try{pend=JSON.parse(localStorage.getItem("hinge:pendingEstimate")||"null");}catch(e){}
+      if(pend&&pend.est){
+        try{var jb={kind:"estimate",title:(rec.name||"Estimate"),total:pend.total||0,payload:pend.est,profileId:rec.id,profileNumber:rec.number||"",customer:{name:rec.name,phone:rec.phone,email:rec.email,addr:rec.addr}};
+          await fetch("/api/jobs",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(jb)});}catch(e){}
+        try{localStorage.removeItem("hinge:pendingEstimate");}catch(e){}
+        fillForm(rec);showEdit();toast("Customer saved · estimate attached");return rec;
+      }
+      if(!opts.noRedirect){flashSaved();showList();return rec;}
+    }
+    fillForm(rec);toast("Saved");
+    return rec;
+  }catch(e){toast("Save failed — check connection");return null;}
+}
+$("#saveBtn").addEventListener("click",()=>save());
+
+// ---- lifecycle: complete / reopen ----
+$("#completeBtn").addEventListener("click",async()=>{
+  if(!current||!current.id){toast("Save the file first");return;}
+  var st=current.status||"active",newStatus,action;
+  if(st==="deleted"){newStatus="active";action="Restored";}
+  else if(st==="completed"){newStatus="active";action="Reopened";}
+  else{newStatus="completed";action="Marked completed";}
+  const body=gather(action,{status:newStatus});body.id=current.id;
+  try{const r=await fetch("/api/profiles",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw 0;
+    toast(action);showList();}catch(e){toast("Failed");}
+});
+
+// ---- delete (soft, with reason -> admin Deleted folder) ----
+$("#deleteBtn").addEventListener("click",()=>{
+  if(!current||!current.id){toast("Nothing to delete");return;}
+  var st=current.status||"active";
+  var permanent=(st==="deleted"&&canSeeAll);
+  $("#delScrim").dataset.mode=permanent?"permanent":"soft";
+  if(permanent){
+    $("#delTitle").textContent="Delete permanently?";
+    $("#delText").innerHTML="This permanently removes the customer and everything in the file. This <b>cannot be undone</b>.";
+    $("#delReason").style.display="none";$("#delConfirm").textContent="Delete permanently";
+  }else{
+    $("#delReason").style.display="";$("#delReason").value="";
+    if(canSeeAll){
+      $("#delTitle").textContent="Delete this customer?";
+      $("#delText").innerHTML="This moves the file to the <b>Deleted</b> folder. You can restore it or remove it permanently from there. Add a note for the record.";
+      $("#delConfirm").textContent="Move to Deleted";
+    }else{
+      $("#delTitle").textContent="Request deletion?";
+      $("#delText").innerHTML="This sends a deletion request to <b>Admin</b> to review. If the job is finished, use <b>Mark completed</b> instead.";
+      $("#delConfirm").textContent="Request deletion";
+    }
+  }
+  $("#delScrim").classList.add("on");
+});
+$("#delCancel").addEventListener("click",()=>$("#delScrim").classList.remove("on"));
+$("#delConfirm").addEventListener("click",async()=>{
+  var mode=$("#delScrim").dataset.mode||"soft";
+  if(mode==="permanent"){
+    try{const r=await fetch("/api/profiles?id="+encodeURIComponent(current.id),{method:"DELETE"});if(!r.ok)throw 0;
+      $("#delScrim").classList.remove("on");toast("Permanently deleted");showList();}catch(e){toast("Delete failed");}
+    return;
+  }
+  const reason=$("#delReason").value.trim();
+  if(!reason){toast("Please add a reason");return;}
+  const body=gather("Deleted file",{status:"deleted",deletedReason:reason,deletedAt:Date.now()});body.id=current.id;
+  try{const r=await fetch("/api/profiles",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw 0;
+    $("#delScrim").classList.remove("on");toast(canSeeAll?"Moved to Deleted folder":"Deletion requested");showList();}catch(e){toast("Delete failed");}
+});
+
+// init list: roles, default view, then load
+async function initList(){
+  try{const d=await (await fetch('/api/me',{credentials:'same-origin'})).json();isAdmin=(d&&(d.role==='admin'||d.role==='super'));canSeeAll=isAdmin;myRole=(d&&d.role)||'employee';}catch(e){}
+  var def="all";
+  try{const p=await (await fetch('/api/prefs')).json();if(p&&p.listView)def=p.listView;}catch(e){}
+  var sel=$("#viewSel");
+  var opts=canSeeAll
+    ?[["active_all","All active customers"],["active_mine","My customers"],["completed","Completed"],["deleted","Deleted (admin)"]]
+    :[["active_mine","My customers"],["completed","My completed"]];
+  sel.innerHTML=opts.map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>';}).join("");
+  sel.value=canSeeAll?(def==="mine"?"active_mine":"active_all"):"active_mine";
+  loadList("");
+  var _sp=new URLSearchParams(location.search);
+  if(_sp.get("new")){fillForm(null);showEdit();if(_sp.get("fromQuick"))toast("Save this customer to attach the estimate");}
+}
+
+
+// ---- burger ----
+(function(){var b=$("#tnavBtn"),m=$("#tnavMenu");
+  function c(){m.classList.remove("open");b.setAttribute("aria-expanded","false");}
+  b.addEventListener("click",e=>{e.stopPropagation();var o=m.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false");});
+  document.addEventListener("click",e=>{if(!m.contains(e.target)&&!b.contains(e.target))c();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")c();});
+})();
+
+initList();
+</script>
+<script>
+/* consistent role-gate: hide admin-only menu items for employees */
+fetch('/api/me',{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(d){
+  var admin=(d&&(d.role==='admin'||d.role==='super'));
+  if(!admin){Array.prototype.forEach.call(document.querySelectorAll('[data-role-min="admin"]'),function(e){e.style.display='none';});}
+}).catch(function(){});
+</script>
+</body>
+</html>
