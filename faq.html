@@ -433,6 +433,12 @@ html{scrollbar-width:auto;scrollbar-color:#b8892a #f0ece4;}
 .faq-item.open .faq-a{max-height:600px;}
 .faq-a p{padding:0 22px 20px;margin:0;font-size:14.5px;line-height:1.75;color:#666;}
 </style>
+<style>
+/* NAVFIX: make entire nav link area clickable (not just the text line) */
+.nav-links{display:flex;align-items:stretch;height:100%;}
+.nav-links a{display:inline-flex !important;align-items:center;height:100%;line-height:normal !important;cursor:pointer;}
+.site-nav .nav-links a{pointer-events:auto;}
+</style>
 <!--FIX:END-->
 </head>
 <body><header class="site-nav">

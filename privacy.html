@@ -419,6 +419,12 @@ html{scrollbar-width:auto;scrollbar-color:#b8892a #f0ece4;}
 ::-webkit-scrollbar-thumb{background:#b8892a;border-radius:8px;border:3px solid #f0ece4;min-height:48px;}
 ::-webkit-scrollbar-thumb:hover{background:#9a7222;}
 </style>
+<style>
+/* NAVFIX: make entire nav link area clickable (not just the text line) */
+.nav-links{display:flex;align-items:stretch;height:100%;}
+.nav-links a{display:inline-flex !important;align-items:center;height:100%;line-height:normal !important;cursor:pointer;}
+.site-nav .nav-links a{pointer-events:auto;}
+</style>
 <!--FIX:END-->
 </head>
 <body><header class="site-nav">
